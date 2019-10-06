@@ -55,7 +55,7 @@ ROOT_URLCONF = 'bigraphs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ["bigraphs/templates/"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
