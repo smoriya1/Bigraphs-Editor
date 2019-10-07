@@ -1,0 +1,50 @@
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+var stage = new Konva.Stage({
+	container: 'container',
+	width: width,
+	height: height
+});
+
+var layer  = new Konva.Layer();
+
+var colours = ['red','orange','yellow', 'green', 'blue', 'purple'];
+
+for (var i = 0; i < 6; i++){
+	var box = new Konva.Rect({
+		x: i*30+50,
+		y: i*18+40,
+		fill: colours[i],
+		stroke: 'black',
+		strokeWidth: 4,
+		draggable: true,
+		width: 100,
+		height: 50
+	});
+	
+	box.on('dragstart', function() {
+		this.moveToTop();
+		layer.draw();
+	});
+	
+	box.on('dragmove', function() {
+		document.body.style.cursor = 'pointer';
+	});
+	
+	box.on('dblclick dbltap', function() {
+		this.destroy();
+		layer.draw();
+	});
+	
+	box.on('mouseover', function() {
+		document.body.style.cursor = 'pointer';
+	});
+	box.on('mouseout', function() {
+		document.body.style.cursor = 'default';
+	});
+	
+	layer.add(box);
+}
+
+stage.add(layer);
