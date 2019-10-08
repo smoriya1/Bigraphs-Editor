@@ -7,19 +7,16 @@
 		<script src="https://unpkg.com/konva@4.0.13/konva.min.js"></script>
 		<meta charset="utf-8" />
 		<title>Test</title>
-		<style>
-		  body {
-			margin: 0;
-			padding: 0;
-			overflow: hidden;
-			background-color: #f0f0f0;
-		  }
-		</style>
+		{% load static %} 
+		<script src='{% static "snap/dist/snap.svg-min.js" %}'></script>
+		
 	</head>
 	<body>
 		<div id="container"></div>
-		{% load static %}
-		<script src='{% static "test.js" %}'></script>
+		<script>
+			var s = Snap(800, 800);
+		</script>
+
 	</body>
 </html>
 			
