@@ -1,0 +1,18 @@
+.dropzone {
+  height: 140px;
+  background-color: #ccc;
+  display: block;
+}
+
+#container {
+  height: 500px;
+  border:1px solid black;
+}
+
+.draggable {
+  display: inline-block;
+  background-color: #99e;
+  -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+  transition: background-color 0.3s;
+}
