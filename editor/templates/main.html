@@ -9,16 +9,14 @@
 		<meta charset="utf-8" />
 		<title>Test</title>
 		{% load static %}
-		<link href='{% static "style.css" %}'>
+		<link rel="stylesheet" type="text/css" href='{% static "style.css" %}'>
 		<!--<script src='{% static "snap/dist/snap.svg-min.js" %}'></script> -->
 		<script src='{% static "Drag.js" %}'></script>
 	</head>
 	<body>
-		<div id="container">
-			<div id="dropzone" class="dropzone">
-			</div>
-			<div class="draggable"></div>
-		</div>
+		<div class="draggable"> bigraph item 1</div>
+		<div class="draggable"> bigraph item 2</div>
+		<div class="dropoff">Field</div>
 	</body>
 </html>
 

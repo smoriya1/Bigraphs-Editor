@@ -1,18 +1,32 @@
-.dropzone {
-  height: 140px;
-  background-color: #ccc;
-  display: block;
-}
-
-#container {
-  height: 500px;
-  border:1px solid black;
-}
-
 .draggable {
+  margin: 5%;
+  background-color: #000;
+  border-radius: 1em;
+  padding: 5%;
+  user-select: none;
+  touch-action: none;
   display: inline-block;
-  background-color: #99e;
+  color: #fff;
   -webkit-transform: translate(0px, 0px);
           transform: translate(0px, 0px);
   transition: background-color 0.3s;
+}
+
+.dropoff {
+  margin: 2%;
+  background-color: #808080;
+  border-radius: 1em;
+  border: dashed 4px transparent;
+  padding: 30%;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.dragging {
+  border-color: #aaa;
+}
+
+.can-drop{
+  background-color: #29e;
+  border-color: #fff;
 }
