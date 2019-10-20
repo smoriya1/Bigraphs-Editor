@@ -19,20 +19,22 @@ interact('.dropoff')
     accept: '.draggable',
     overlap: 1,
     ondropactivate: function (event) {
-      event.target.classList.add('dragging')
+      event.target.classList.add('dragging');
     },
     ondropdeactivate: function (event) {
-      event.target.classList.remove('dragging')
-      event.target.classList.remove('cannot-drop')
-      event.target.classList.remove('can-drop')
+      event.target.classList.remove('dragging');
+      event.target.classList.remove('cannot-drop');
+      event.target.classList.remove('drop-target');
     },
     ondragenter: function (event) {
-      event.target.classList.remove('cannot-drop')
-      event.target.classList.add('can-drop')
+      console.log(event);
+      event.target.classList.add('drop-target');
+      event.relatedTarget.classList.add('can-drop');
     },
     ondragleave: function (event) {
-      event.target.classList.remove('can-drop')
-      event.target.classList.add('cannnot-drop')
+      event.relatedTarget.classList.remove('can-drop');
+      event.target.classList.add('cannnot-drop');
+      event.target.classList.remove('drop-target');
     }
   })
 
@@ -53,20 +55,13 @@ function dragMoveListener (event) {
 
 function resizeListener (event) {
   var target = event.target
-  var x = (parseFloat(target.getAttribute('data-x')) || 0)
-  var y = (parseFloat(target.getAttribute('data-y')) || 0)
-  console.log("init ",x)
-  console.log("init ",y)
-  target.style.width = event.rect.width + 'px'
-  target.style.height = event.rect.height + 'px'
-  console.log("target style width ",target.style.width)
-  console.log("target style height ",target.style.height)
-  x += event.deltaRect.left
-  y += event.deltaRect.top
-  console.log("new ",x)
-  console.log("new ",y)
-  target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)'
-  console.log("target.style.webkitTransform ",target.style.webkitTransform)
-  target.setAttribute('data-x', x)
-  target.setAttribute('data-y', y)
+  var x = (parseFloat(target.getAttribute('data-x')) || 0);
+  var y = (parseFloat(target.getAttribute('data-y')) || 0);
+  target.style.width = event.rect.width + 'px';
+  target.style.height = event.rect.height + 'px';
+  x += event.deltaRect.left;
+  y += event.deltaRect.top;
+  target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
 }

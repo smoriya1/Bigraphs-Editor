@@ -1,8 +1,10 @@
 #square {
   background-color: #99e;
+  z-index: 1;
   border-radius: 1em;
   border: solid 3px black;
-  padding: 5%;
+  height: 150px;
+  width: 150px;
   color: #fff;
   left: 10px;
   top: 30px;
@@ -11,13 +13,13 @@
 }
 
 #dotted {
-  padding: 5%;
+  height: 200px;
+  width: 300px;
   border: dashed 4px transparent;
   border-radius: 1em;
   border-color: #000;
-  left: 300px;
+  left: 200px;
   top: 30px;
-  z-index: -5;
   box-sizing: border-box;
   position: absolute;
 }
@@ -31,7 +33,6 @@
   border-color: #000;
   border-radius: 1em;
   border-radius: 50%;
-  z-index: -5;
   display: inline-block;
   position: absolute;
 }
@@ -53,7 +54,11 @@
   border-color: #aaa;
 }
 
-.dropoff.can-drop{
+.drop-target{
   background-color: #29e;
   border-color: #fff;
+}
+
+#square.can-drop{
+  background-color: #4e4;
 }
