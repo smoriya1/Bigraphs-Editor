@@ -1,32 +1,59 @@
-.draggable {
-  margin: 5%;
-  background-color: #000;
+#square {
+  background-color: #99e;
   border-radius: 1em;
+  border: solid 3px black;
   padding: 5%;
-  user-select: none;
-  touch-action: none;
-  display: inline-block;
   color: #fff;
-  -webkit-transform: translate(0px, 0px);
-          transform: translate(0px, 0px);
-  transition: background-color 0.3s;
+  left: 10px;
+  top: 30px;
+  box-sizing: border-box;
+  position: absolute;
 }
 
-.dropoff {
-  margin: 2%;
-  background-color: #808080;
+#dotted {
+  padding: 5%;
+  border: dashed 4px transparent;
+  border-radius: 1em;
+  border-color: #000;
+  left: 300px;
+  top: 30px;
+  z-index: -5;
+  box-sizing: border-box;
+  position: absolute;
+}
+
+#circle {
+  height: 200px;
+  width: 200px;
+  left: 600px;
+  top: 30px;
+  border: dashed 4px transparent;
+  border-color: #000;
+  border-radius: 1em;
+  border-radius: 50%;
+  z-index: -5;
+  display: inline-block;
+  position: absolute;
+}
+
+.env {
+  background-color: #C0C0C0;
   border-radius: 1em;
   border: dashed 4px transparent;
   padding: 30%;
+  position: absolute;
   color: #fff;
-  transition: background-color 0.3s;
+  left: 10px;
+  top: 250px;
+  z-index: -10;
+  box-sizing: border-box;
 }
 
 .dragging {
   border-color: #aaa;
 }
 
-.can-drop{
+.dropoff.can-drop{
   background-color: #29e;
   border-color: #fff;
 }

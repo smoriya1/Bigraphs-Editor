@@ -5,18 +5,17 @@
 <html>
 	<head>
 		<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
-		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/3.4.0/fabric.min.js"></script> -->
 		<meta charset="utf-8" />
 		<title>Test</title>
 		{% load static %}
 		<link rel="stylesheet" type="text/css" href='{% static "style.css" %}'>
-		<!--<script src='{% static "snap/dist/snap.svg-min.js" %}'></script> -->
 		<script src='{% static "Drag.js" %}'></script>
 	</head>
 	<body>
-		<div class="draggable"> bigraph item 1</div>
-		<div class="draggable"> bigraph item 2</div>
-		<div class="dropoff">Field</div>
+		<div id="square" class="draggable"> bigraph item 1</div>
+		<div id="dotted" class="dropoff"> bigraph item 2</div>
+		<span id="circle" class="dropoff"></span>
+		<div class="env">Field</div>
 	</body>
 </html>
 
