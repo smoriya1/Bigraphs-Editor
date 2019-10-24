@@ -4,18 +4,31 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+		<!--<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>-->
+		<script src="https://unpkg.com/gojs/release/go-debug.js"></script>
 		<meta charset="utf-8" />
 		<title>Test</title>
 		{% load static %}
-		<link rel="stylesheet" type="text/css" href='{% static "style.css" %}'>
-		<script src='{% static "Drag.js" %}'></script>
+		<link rel="stylesheet" type="text/css" href='{% static "style2.css" %}'>
+		<script src='{% static "jquery-3.4.1.js" %}'></script>
+		<script src='{% static "graph.js" %}'></script>
 	</head>
-	<body>
-		<div id="square" class="draggable"> bigraph item 1</div>
-		<div id="dotted" class="dropoff"> bigraph item 2</div>
-		<span id="circle" class="dropoff"></span>
-		<div class="env">Field</div>
+	<body onload="init()">
+		<!--
+		<div class="block">
+			<button id="sq" class="btn">Add Square</button>
+    	<button id="dsq" class="btn">Add Dotted Rectangle</button>
+    	<button id="dov" class="btn">Add Dotted Oval</button>
+		</div>
+		-->
+		<!--<div id="sq" class="draggable"> bigraph item 1</div>-->
+		<!--<div id="dsq" class="dropoff"> bigraph item 2</div>-->
+		<!--<span id="dov" class="dropoff"></span>-->
+		<div id="mainDiv">
+		    <div id="myPaletteDiv"></div>
+		    <div id="myDiagramDiv"></div>
+	  </div>
+
 	</body>
 </html>
 

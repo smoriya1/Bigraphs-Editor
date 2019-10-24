@@ -1,0 +1,18 @@
+#mainDiv{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+ #myDiagramDiv{
+   flex-grow: 1;
+   height: 750px;
+   border: solid 1px black;
+ }
+
+#myPaletteDiv{
+  width: 100px;
+  margin-right: 2px;
+  background-color: whitesmoke;
+  border: solid 1px black;
+}

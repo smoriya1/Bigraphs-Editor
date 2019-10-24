@@ -1,4 +1,13 @@
-#square {
+.block {
+    display: block;
+    float: left;
+    background-color: #ccc;
+    text-align: center;
+    line-height: 50px;
+    text-decoration: none;
+}
+
+#bsq {
   background-color: #99e;
   z-index: 1;
   border-radius: 1em;
@@ -12,7 +21,7 @@
   position: absolute;
 }
 
-#dotted {
+#bdsq {
   height: 200px;
   width: 300px;
   border: dashed 4px transparent;
@@ -24,7 +33,7 @@
   position: absolute;
 }
 
-#circle {
+#bdov {
   height: 200px;
   width: 200px;
   left: 600px;
@@ -37,16 +46,13 @@
   position: absolute;
 }
 
-.env {
-  background-color: #C0C0C0;
-  border-radius: 1em;
-  border: dashed 4px transparent;
-  padding: 30%;
+#env {
+  width:500px;
+  height:500px;
+  background-color: #DAE4E4;
   position: absolute;
-  color: #fff;
   left: 10px;
-  top: 250px;
-  z-index: -10;
+  top: 100px;
   box-sizing: border-box;
 }
 
@@ -59,6 +65,6 @@
   border-color: #fff;
 }
 
-#square.can-drop{
+#bsq.can-drop{
   background-color: #4e4;
 }

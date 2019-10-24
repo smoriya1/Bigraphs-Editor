@@ -27,7 +27,6 @@ interact('.dropoff')
       event.target.classList.remove('drop-target');
     },
     ondragenter: function (event) {
-      console.log(event);
       event.target.classList.add('drop-target');
       event.relatedTarget.classList.add('can-drop');
     },
@@ -65,3 +64,14 @@ function resizeListener (event) {
   target.setAttribute('data-x', x);
   target.setAttribute('data-y', y);
 }
+
+$(document).ready(function() {
+  var dict = {};
+  dict["sq"] = '<div id="bsq" class="draggable"></div>';
+  dict["dsq"] = '<div id="bdsq" class="dropoff"></div>';
+  dict["dov"] = '<div id="bdov" class="dropoff"></div>';
+  $('.btn').click(function() {
+    var id = $(this).attr('id');
+    $("body").append(dict[id]);
+  });
+});
