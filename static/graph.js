@@ -71,7 +71,7 @@ function init() {
         { resizable: true, resizeObjectName: "rect" },
         $(go.Panel, "Auto",
           $(go.Shape, "Rectangle",
-            { name:"rect", width: 80, height: 80, fill: "#00A9C9", strokeWidth: 0 },
+            { name:"rect", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 0 },
             new go.Binding("figure", "figure")),
             $(go.TextBlock,
             {
@@ -88,12 +88,12 @@ function init() {
       makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
     ));
 
-    myDiagram.nodeTemplateMap.add("dashedOval",
+    myDiagram.nodeTemplateMap.add("oval",
       $(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "dOval" },
+        { resizable: true, resizeObjectName: "ov" },
         $(go.Panel, "Auto",
           $(go.Shape, "Circle",
-            {name: "dOval", width: 80, height: 80, fill: "transparent", strokeDashArray: [5,3]}),
+            {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1}),
         ),
           $(go.TextBlock,
           {
@@ -135,7 +135,7 @@ function init() {
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
-            { category: "dashedOval", text: "oval"},
+            { category: "oval", text: "oval"},
             { category: "dashedBox", text: "dashed"},
             { category: "box" , text: "box"},
           ])
