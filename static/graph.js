@@ -71,7 +71,7 @@ function init() {
         { resizable: true, resizeObjectName: "rect" },
         $(go.Panel, "Auto",
           $(go.Shape, "Rectangle",
-            { name:"rect", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 0 },
+            { name:"rect", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1 },
             new go.Binding("figure", "figure")),
             $(go.TextBlock,
             {
@@ -108,13 +108,8 @@ function init() {
     myDiagram.linkTemplate =
       $(go.Link,
         {
-          routing: go.Link.AvoidsNodes,
-          curve: go.Link.JumpOver,
-          corner: 5, toShortLength: 4,
-          relinkableFrom: true,
-          relinkableTo: true,
+          curve: go.Link.Bezier,
           reshapable: true,
-          resegmentable: true,
           mouseEnter: function(e, link) { link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)"; },
           mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; },
           selectionAdorned: false
