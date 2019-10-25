@@ -66,6 +66,24 @@ function init() {
         ),
       ));
 
+      myDiagram.nodeTemplateMap.add("voidBox",
+        $(go.Node, "Table", nodeStyle(),
+          { resizable: true, resizeObjectName: "dRect" },
+          $(go.Panel, "Auto",
+            $(go.Shape, "Rectangle",
+              {name:"dRect", width: 80, height: 80, fill: "transparent"},
+              new go.Binding("figure", "figure")),
+              $(go.TextBlock,
+              {
+                alignment: go.Spot.TopLeft,
+                alignmentFocus: new go.Spot(0, 0, -4, -4),
+                font: "Bold 10pt Sans-Serif",
+                editable: true
+              },
+            new go.Binding("text").makeTwoWay())
+          ),
+        ));
+
     myDiagram.nodeTemplateMap.add("box",
       $(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "rect" },
@@ -105,6 +123,23 @@ function init() {
           new go.Binding("text").makeTwoWay())
       ));
 
+      myDiagram.nodeTemplateMap.add("filledOval",
+        $(go.Node, "Table", nodeStyle(),
+          { resizable: true, resizeObjectName: "ov" },
+          $(go.Panel, "Auto",
+            $(go.Shape, "Circle",
+              {name: "ov", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1}),
+          ),
+            $(go.TextBlock,
+            {
+              alignment: go.Spot.TopLeft,
+              alignmentFocus: new go.Spot(0, 0, -4, -4),
+              font: "Bold 10pt Sans-Serif",
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+        ));
+
     myDiagram.linkTemplate =
       $(go.Link,
         {
@@ -131,8 +166,10 @@ function init() {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
             { category: "oval", text: "oval"},
-            { category: "dashedBox", text: "dashed"},
-            { category: "box" , text: "box"},
+            { category: "filledOval", text: "filledOval"},
+            { category: "dashedBox", text: "dashedBox"},
+            { category: "voidBox", text: "box"},
+            { category: "box" , text: "filledBox"}
           ])
         });
   }
