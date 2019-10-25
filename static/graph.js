@@ -116,7 +116,7 @@ function init() {
       $(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "ov" },
         $(go.Panel, "Auto",
-          $(go.Shape, "Circle",
+          $(go.Shape, "ellipse",
             {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1}),
           $(go.TextBlock,
           {
@@ -137,7 +137,7 @@ function init() {
         $(go.Node, "Table", nodeStyle(),
           { resizable: true, resizeObjectName: "ov" },
           $(go.Panel, "Auto",
-            $(go.Shape, "Circle",
+            $(go.Shape, "ellipse",
               {name: "ov", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1}),
 
             $(go.TextBlock,
