@@ -4,7 +4,9 @@ function init() {
     myDiagram =
       $(go.Diagram, "myDiagramDiv",
         {
-          "undoManager.isEnabled": true
+          "undoManager.isEnabled": true,
+          "relinkingTool.isUnconnectedLinkValid": true,
+          "linkingTool.isUnconnectedLinkValid": true
         });
 
     function nodeStyle() {
@@ -82,6 +84,10 @@ function init() {
               },
             new go.Binding("text").makeTwoWay())
           ),
+            makePort("T", go.Spot.Top, go.Spot.Top, false, true),
+            makePort("L", go.Spot.Left, go.Spot.Left, true, true),
+            makePort("R", go.Spot.Right, go.Spot.Right, true, true),
+            makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
         ));
 
     myDiagram.nodeTemplateMap.add("box",
@@ -99,11 +105,11 @@ function init() {
               editable: true
             },
           new go.Binding("text").makeTwoWay())
-      ),
-      makePort("T", go.Spot.Top, go.Spot.Top, false, true),
-      makePort("L", go.Spot.Left, go.Spot.Left, true, true),
-      makePort("R", go.Spot.Right, go.Spot.Right, true, true),
-      makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
+        ),
+          makePort("T", go.Spot.Top, go.Spot.Top, false, true),
+          makePort("L", go.Spot.Left, go.Spot.Left, true, true),
+          makePort("R", go.Spot.Right, go.Spot.Right, true, true),
+          makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
     ));
 
     myDiagram.nodeTemplateMap.add("oval",
@@ -112,7 +118,6 @@ function init() {
         $(go.Panel, "Auto",
           $(go.Shape, "Circle",
             {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1}),
-        ),
           $(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
@@ -121,6 +126,11 @@ function init() {
             editable: true
           },
           new go.Binding("text").makeTwoWay())
+        ),
+          makePort("T", go.Spot.Top, go.Spot.Top, false, true),
+          makePort("L", go.Spot.Left, go.Spot.Left, true, true),
+          makePort("R", go.Spot.Right, go.Spot.Right, true, true),
+          makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
       ));
 
       myDiagram.nodeTemplateMap.add("filledOval",
@@ -129,7 +139,7 @@ function init() {
           $(go.Panel, "Auto",
             $(go.Shape, "Circle",
               {name: "ov", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1}),
-          ),
+
             $(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -138,6 +148,11 @@ function init() {
               editable: true
             },
             new go.Binding("text").makeTwoWay())
+          ),
+            makePort("T", go.Spot.Top, go.Spot.Top, false, true),
+            makePort("L", go.Spot.Left, go.Spot.Left, true, true),
+            makePort("R", go.Spot.Right, go.Spot.Right, true, true),
+            makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
         ));
 
     myDiagram.linkTemplate =
@@ -155,6 +170,16 @@ function init() {
         $(go.Shape,
           { isPanelMain: true, stroke: "gray", strokeWidth: 2 },
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
+          $(go.TextBlock,
+            {
+              textAlign: "center",
+              font: "12pt helvetica, arial, sans-serif",
+              stroke: "#000000",
+              margin: 2,
+              minSize: new go.Size(10, NaN),
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
       );
 
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
@@ -166,10 +191,10 @@ function init() {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
             { category: "oval", text: "oval"},
-            { category: "filledOval", text: "filledOval"},
+            { category: "filledOval", text: "fillOval"},
             { category: "dashedBox", text: "dashedBox"},
             { category: "voidBox", text: "box"},
-            { category: "box" , text: "filledBox"}
+            { category: "box" , text: "fillBox"}
           ])
         });
   }
