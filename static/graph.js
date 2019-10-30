@@ -18,6 +18,7 @@ function init() {
       ];
     }
 
+/*
     function makePort(name, align, spot, output, input) {
       var horizontal = align.equals(go.Spot.Top) || align.equals(go.Spot.Bottom);
       return $(go.Shape,
@@ -42,6 +43,7 @@ function init() {
           }
         });
     }
+    */
 
     function textStyle() {
       return {
@@ -57,14 +59,6 @@ function init() {
           $(go.Shape, "Rectangle",
             {name:"dRect", width: 80, height: 80, fill: "transparent", strokeDashArray: [5,3]},
             new go.Binding("figure", "figure")),
-            $(go.TextBlock,
-            {
-              alignment: go.Spot.TopLeft,
-              alignmentFocus: new go.Spot(0, 0, -4, -4),
-              font: "Bold 10pt Sans-Serif",
-              editable: true
-            },
-          new go.Binding("text").makeTwoWay())
         ),
       ));
 
@@ -73,7 +67,7 @@ function init() {
           { resizable: true, resizeObjectName: "dRect" },
           $(go.Panel, "Auto",
             $(go.Shape, "Rectangle",
-              {name:"dRect", width: 80, height: 80, fill: "transparent"},
+              {name:"dRect", width: 80, height: 80, fill: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
               new go.Binding("figure", "figure")),
               $(go.TextBlock,
               {
@@ -84,10 +78,12 @@ function init() {
               },
             new go.Binding("text").makeTwoWay())
           ),
+          /*
             makePort("T", go.Spot.Top, go.Spot.Top, false, true),
             makePort("L", go.Spot.Left, go.Spot.Left, true, true),
             makePort("R", go.Spot.Right, go.Spot.Right, true, true),
             makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
+            */
         ));
 
     myDiagram.nodeTemplateMap.add("box",
@@ -95,7 +91,7 @@ function init() {
         { resizable: true, resizeObjectName: "rect" },
         $(go.Panel, "Auto",
           $(go.Shape, "Rectangle",
-            { name:"rect", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1 },
+            { name:"rect", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("figure", "figure")),
             $(go.TextBlock,
             {
@@ -106,10 +102,12 @@ function init() {
             },
           new go.Binding("text").makeTwoWay())
         ),
+        /*
           makePort("T", go.Spot.Top, go.Spot.Top, false, true),
           makePort("L", go.Spot.Left, go.Spot.Left, true, true),
           makePort("R", go.Spot.Right, go.Spot.Right, true, true),
           makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
+          */
     ));
 
     myDiagram.nodeTemplateMap.add("oval",
@@ -117,7 +115,7 @@ function init() {
         { resizable: true, resizeObjectName: "ov" },
         $(go.Panel, "Auto",
           $(go.Shape, "ellipse",
-            {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1}),
+            {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
           $(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
@@ -127,19 +125,20 @@ function init() {
           },
           new go.Binding("text").makeTwoWay())
         ),
+        /*
           makePort("T", go.Spot.Top, go.Spot.Top, false, true),
           makePort("L", go.Spot.Left, go.Spot.Left, true, true),
           makePort("R", go.Spot.Right, go.Spot.Right, true, true),
           makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
+          */
       ));
 
       myDiagram.nodeTemplateMap.add("filledOval",
         $(go.Node, "Table", nodeStyle(),
-          { resizable: true, resizeObjectName: "ov" },
+          { /*resizable: true, resizeObjectName: "ov"*/ },
           $(go.Panel, "Auto",
             $(go.Shape, "ellipse",
-              {name: "ov", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1}),
-
+              {name: "ov", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
             $(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -149,12 +148,15 @@ function init() {
             },
             new go.Binding("text").makeTwoWay())
           ),
+          /*
             makePort("T", go.Spot.Top, go.Spot.Top, false, true),
             makePort("L", go.Spot.Left, go.Spot.Left, true, true),
             makePort("R", go.Spot.Right, go.Spot.Right, true, true),
             makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
+            */
         ));
 
+/*
     myDiagram.linkTemplate =
       $(go.Link,
         {
@@ -172,7 +174,9 @@ function init() {
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
           $(go.TextBlock,
             {
-              textAlign: "center",
+              segmentIndex: 0,
+              segmentOffset: new go.Point(NaN, NaN),
+              segmentOrientation: go.Link.OrientUpright,
               font: "12pt helvetica, arial, sans-serif",
               stroke: "#000000",
               margin: 2,
@@ -181,6 +185,13 @@ function init() {
             },
             new go.Binding("text").makeTwoWay())
       );
+      */
+
+    myDiagram.linkTemplateMap.add("linkToLink",
+           $("Link",
+             { relinkableFrom: true, relinkableTo: true },
+             $("Shape", { stroke: "#2D9945", strokeWidth: 2 })
+           ));
 
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
@@ -190,9 +201,10 @@ function init() {
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
+            {"key":"Alpha", "color":"lightblue", "loc":"29 14"},
             { category: "oval", text: "oval"},
             { category: "filledOval", text: "fillOval"},
-            { category: "dashedBox", text: "dashedBox"},
+            { category: "dashedBox"},
             { category: "voidBox", text: "box"},
             { category: "box" , text: "fillBox"}
           ])
