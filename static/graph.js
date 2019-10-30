@@ -156,7 +156,7 @@ function init() {
             */
         ));
 
-/*
+
     myDiagram.linkTemplate =
       $(go.Link,
         {
@@ -174,9 +174,8 @@ function init() {
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
           $(go.TextBlock,
             {
-              segmentIndex: 0,
+              segmentIndex: -1,
               segmentOffset: new go.Point(NaN, NaN),
-              segmentOrientation: go.Link.OrientUpright,
               font: "12pt helvetica, arial, sans-serif",
               stroke: "#000000",
               margin: 2,
@@ -185,13 +184,6 @@ function init() {
             },
             new go.Binding("text").makeTwoWay())
       );
-      */
-
-    myDiagram.linkTemplateMap.add("linkToLink",
-           $("Link",
-             { relinkableFrom: true, relinkableTo: true },
-             $("Shape", { stroke: "#2D9945", strokeWidth: 2 })
-           ));
 
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
@@ -201,7 +193,6 @@ function init() {
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
-            {"key":"Alpha", "color":"lightblue", "loc":"29 14"},
             { category: "oval", text: "oval"},
             { category: "filledOval", text: "fillOval"},
             { category: "dashedBox"},
