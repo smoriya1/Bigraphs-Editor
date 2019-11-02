@@ -60,29 +60,23 @@ function init() {
         ),
       ));
 
-      myDiagram.nodeTemplateMap.add("voidBox",
-        $(go.Node, "Table", nodeStyle(),
-          { resizable: true, resizeObjectName: "dRect" },
-          $(go.Panel, "Auto",
-            $(go.Shape, "Rectangle",
-              {name:"dRect", width: 80, height: 80, fill: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-              new go.Binding("figure", "figure")),
-              $(go.TextBlock,
-              {
-                alignment: go.Spot.TopLeft,
-                alignmentFocus: new go.Spot(0, 0, -4, -4),
-                font: "Bold 10pt Sans-Serif",
-                editable: true
-              },
-            new go.Binding("text").makeTwoWay())
-          ),
-          /*
-            makePort("T", go.Spot.Top, go.Spot.Top, false, true),
-            makePort("L", go.Spot.Left, go.Spot.Left, true, true),
-            makePort("R", go.Spot.Right, go.Spot.Right, true, true),
-            makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
-            */
-        ));
+    myDiagram.nodeTemplateMap.add("voidBox",
+      $(go.Node, "Table", nodeStyle(),
+        { resizable: true, resizeObjectName: "dRect" },
+        $(go.Panel, "Auto",
+          $(go.Shape, "Rectangle",
+            {name:"dRect", width: 80, height: 80, fill: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("figure", "figure")),
+            $(go.TextBlock,
+            {
+              alignment: go.Spot.TopLeft,
+              alignmentFocus: new go.Spot(0, 0, -4, -4),
+              font: "Bold 10pt Sans-Serif",
+              editable: true
+            },
+          new go.Binding("text").makeTwoWay())
+        ),
+      ));
 
     myDiagram.nodeTemplateMap.add("box",
       $(go.Node, "Table", nodeStyle(),
@@ -100,12 +94,6 @@ function init() {
             },
           new go.Binding("text").makeTwoWay())
         ),
-        /*
-          makePort("T", go.Spot.Top, go.Spot.Top, false, true),
-          makePort("L", go.Spot.Left, go.Spot.Left, true, true),
-          makePort("R", go.Spot.Right, go.Spot.Right, true, true),
-          makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
-          */
     ));
 
 
@@ -125,60 +113,66 @@ function init() {
           },
           new go.Binding("text").makeTwoWay())
         ),
-        /*
-          makePort("T", go.Spot.Top, go.Spot.Top, false, true),
-          makePort("L", go.Spot.Left, go.Spot.Left, true, true),
-          makePort("R", go.Spot.Right, go.Spot.Right, true, true),
-          makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
-          */
       ));
 
-      myDiagram.nodeTemplateMap.add("filledOval",
+    myDiagram.nodeTemplateMap.add("filledOval",
+      $(go.Node, "Table", nodeStyle(),
+      {
+        resizable: true, resizeObjectName: "fOv"},
+        $(go.Panel, "Auto",
+          $(go.Shape, "ellipse",
+            {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
+          $(go.TextBlock,
+          {
+            alignment: go.Spot.TopLeft,
+            alignmentFocus: new go.Spot(0, 0, -4, -4),
+            font: "Bold 10pt Sans-Serif",
+            editable: true
+          },
+          new go.Binding("text").makeTwoWay())
+        ),
+      ));
+
+      myDiagram.nodeTemplateMap.add("external",
         $(go.Node, "Table", nodeStyle(),
-        {
-          resizable: true, resizeObjectName: "fOv"},
           $(go.Panel, "Auto",
-            $(go.Shape, "ellipse",
-              {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
+            $(go.Shape, "square",
+              {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
             $(go.TextBlock,
+              "ext",
             {
-              alignment: go.Spot.TopLeft,
-              alignmentFocus: new go.Spot(0, 0, -4, -4),
+              alignment: go.Spot.Center,
               font: "Bold 10pt Sans-Serif",
               editable: true
             },
             new go.Binding("text").makeTwoWay())
           ),
-          /*
-            makePort("T", go.Spot.Top, go.Spot.Top, false, true),
-            makePort("L", go.Spot.Left, go.Spot.Left, true, true),
-            makePort("R", go.Spot.Right, go.Spot.Right, true, true),
-            makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
-            */
         ));
 
-        myDiagram.nodeTemplateMap.add("external",
-          $(go.Node, "Table", nodeStyle(),
-            $(go.Panel, "Auto",
-              $(go.Shape, "square",
-                {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
-              $(go.TextBlock,
-                "ext",
-              {
-                alignment: go.Spot.Center,
-                font: "Bold 10pt Sans-Serif",
-                editable: true
-              },
-              new go.Binding("text").makeTwoWay())
-            ),
-            /*
-              makePort("T", go.Spot.Top, go.Spot.Top, false, true),
-              makePort("L", go.Spot.Left, go.Spot.Left, true, true),
-              makePort("R", go.Spot.Right, go.Spot.Right, true, true),
-              makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
-              */
-          ));
+      myDiagram.nodeTemplateMap.add("LinkLabel",
+        $("Node",
+          {
+            selectable: false, avoidable: false,
+            layerName: "Foreground"
+          },
+          $("Shape", "Ellipse",
+            {
+              width: 5, height: 5, stroke: null,
+              portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
+            })
+        ));
 
+    myDiagram.linkTemplateMap.add("multiLinks",
+      $("Link",
+        { relinkableFrom: true, relinkableTo: true },
+        $("Shape", { stroke: "#2D9945", strokeWidth: 2 })
+      ));
+
+    myDiagram.model =
+        $(go.GraphLinksModel,
+          { linkLabelKeysProperty: "labelKeys" });
+
+    myDiagram.toolManager.linkingTool.archetypeLabelNodeData = { category: "LinkLabel" };
 
     myDiagram.linkTemplate =
       $(go.Link,
@@ -196,6 +190,7 @@ function init() {
           { isPanelMain: true, stroke: "gray", strokeWidth: 2 },
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
       );
+
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
@@ -205,10 +200,10 @@ function init() {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
             { category: "oval", text: "oval", },
-            { category: "filledOval", text: "fillOval"},
-            { category: "dashedBox"},
-            { category: "voidBox", text: "box"},
-            { category: "box" , text: "fillBox"},
+            { category: "filledOval", text: "fillOval" },
+            { category: "dashedBox" },
+            { category: "voidBox", text: "box" },
+            { category: "box" , text: "fillBox" },
             { category: "external" }
           ])
         });
