@@ -5,8 +5,6 @@ function init() {
       $(go.Diagram, "myDiagramDiv",
         {
           "undoManager.isEnabled": true,
-          "relinkingTool.isUnconnectedLinkValid": true,
-          "linkingTool.isUnconnectedLinkValid": true
         });
 
     function nodeStyle() {
@@ -54,10 +52,10 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("dashedBox",
       $(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "dRect" },
+        { resizable: true, resizeObjectName: "dBox", zOrder: -1},
         $(go.Panel, "Auto",
           $(go.Shape, "Rectangle",
-            {name:"dRect", width: 80, height: 80, fill: "transparent", strokeDashArray: [5,3]},
+            {name:"dBox", width: 80, height: 80, fill: "transparent", strokeDashArray: [5,3]},
             new go.Binding("figure", "figure")),
         ),
       ));
@@ -88,10 +86,10 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("box",
       $(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "rect" },
+        { resizable: true, resizeObjectName: "b" },
         $(go.Panel, "Auto",
           $(go.Shape, "Rectangle",
-            { name:"rect", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("figure", "figure")),
             $(go.TextBlock,
             {
@@ -109,6 +107,8 @@ function init() {
           makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
           */
     ));
+
+
 
     myDiagram.nodeTemplateMap.add("oval",
       $(go.Node, "Table", nodeStyle(),
@@ -135,10 +135,11 @@ function init() {
 
       myDiagram.nodeTemplateMap.add("filledOval",
         $(go.Node, "Table", nodeStyle(),
-          { /*resizable: true, resizeObjectName: "ov"*/ },
+        {
+          resizable: true, resizeObjectName: "fOv"},
           $(go.Panel, "Auto",
             $(go.Shape, "ellipse",
-              {name: "ov", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
+              {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
             $(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -156,6 +157,28 @@ function init() {
             */
         ));
 
+        myDiagram.nodeTemplateMap.add("external",
+          $(go.Node, "Table", nodeStyle(),
+            $(go.Panel, "Auto",
+              $(go.Shape, "square",
+                {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
+              $(go.TextBlock,
+                "ext",
+              {
+                alignment: go.Spot.Center,
+                font: "Bold 10pt Sans-Serif",
+                editable: true
+              },
+              new go.Binding("text").makeTwoWay())
+            ),
+            /*
+              makePort("T", go.Spot.Top, go.Spot.Top, false, true),
+              makePort("L", go.Spot.Left, go.Spot.Left, true, true),
+              makePort("R", go.Spot.Right, go.Spot.Right, true, true),
+              makePort("B", go.Spot.Bottom, go.Spot.Bottom, true, false)
+              */
+          ));
+
 
     myDiagram.linkTemplate =
       $(go.Link,
@@ -172,19 +195,7 @@ function init() {
         $(go.Shape,
           { isPanelMain: true, stroke: "gray", strokeWidth: 2 },
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
-          $(go.TextBlock,
-            {
-              segmentIndex: -1,
-              segmentOffset: new go.Point(NaN, NaN),
-              font: "12pt helvetica, arial, sans-serif",
-              stroke: "#000000",
-              margin: 2,
-              minSize: new go.Size(10, NaN),
-              editable: true
-            },
-            new go.Binding("text").makeTwoWay())
       );
-
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
@@ -193,11 +204,12 @@ function init() {
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
-            { category: "oval", text: "oval"},
+            { category: "oval", text: "oval", },
             { category: "filledOval", text: "fillOval"},
             { category: "dashedBox"},
             { category: "voidBox", text: "box"},
-            { category: "box" , text: "fillBox"}
+            { category: "box" , text: "fillBox"},
+            { category: "external" }
           ])
         });
   }
