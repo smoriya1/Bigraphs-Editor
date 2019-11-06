@@ -1,8 +1,8 @@
 function init() {
     if (window.goSamples) goSamples();
-    var $ = go.GraphObject.make;
+    var GO = go.GraphObject.make;
     myDiagram =
-      $(go.Diagram, "myDiagramDiv",
+      GO(go.Diagram, "myDiagramDiv",
         {
           "undoManager.isEnabled": true,
         });
@@ -16,33 +16,6 @@ function init() {
       ];
     }
 
-/*
-    function makePort(name, align, spot, output, input) {
-      var horizontal = align.equals(go.Spot.Top) || align.equals(go.Spot.Bottom);
-      return $(go.Shape,
-        {
-          fill: "transparent",
-          strokeWidth: 0,
-          width: horizontal ? NaN : 4,
-          height: !horizontal ? NaN : 4,
-          alignment: align,
-          stretch: (horizontal ? go.GraphObject.Horizontal : go.GraphObject.Vertical),
-          portId: name,
-          fromSpot: spot,
-          fromLinkable: output,
-          toSpot: spot,
-          toLinkable: input,
-          cursor: "pointer",
-          mouseEnter: function(e, port) {
-            if (!e.diagram.isReadOnly) port.fill = "rgba(255,0,255,0.5)";
-          },
-          mouseLeave: function(e, port) {
-            port.fill = "transparent";
-          }
-        });
-    }
-    */
-
     function textStyle() {
       return {
         font: "bold 11pt Helvetica, Arial, sans-serif",
@@ -51,23 +24,23 @@ function init() {
     }
 
     myDiagram.nodeTemplateMap.add("dashedBox",
-      $(go.Node, "Table", nodeStyle(),
+      GO(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "dBox", zOrder: -1},
-        $(go.Panel, "Auto",
-          $(go.Shape, "Rectangle",
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "Rectangle",
             {name:"dBox", width: 80, height: 80, fill: "transparent", strokeDashArray: [5,3]},
             new go.Binding("figure", "figure")),
         ),
       ));
 
     myDiagram.nodeTemplateMap.add("voidBox",
-      $(go.Node, "Table", nodeStyle(),
+      GO(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "dRect" },
-        $(go.Panel, "Auto",
-          $(go.Shape, "Rectangle",
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "Rectangle",
             {name:"dRect", width: 80, height: 80, fill: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("figure", "figure")),
-            $(go.TextBlock,
+            GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
               alignmentFocus: new go.Spot(0, 0, -4, -4),
@@ -79,13 +52,14 @@ function init() {
       ));
 
     myDiagram.nodeTemplateMap.add("box",
-      $(go.Node, "Table", nodeStyle(),
+      GO(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "b" },
-        $(go.Panel, "Auto",
-          $(go.Shape, "Rectangle",
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "Rectangle",
             { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("figure", "figure")),
-            $(go.TextBlock,
+            new go.Binding("figure", "figure"),
+            new go.Binding("fill", "fill")),
+            GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
               alignmentFocus: new go.Spot(0, 0, -4, -4),
@@ -99,12 +73,12 @@ function init() {
 
 
     myDiagram.nodeTemplateMap.add("oval",
-      $(go.Node, "Table", nodeStyle(),
+      GO(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "ov" },
-        $(go.Panel, "Auto",
-          $(go.Shape, "ellipse",
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "ellipse",
             {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
-          $(go.TextBlock,
+          GO(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
             alignmentFocus: new go.Spot(0, 0, -4, -4),
@@ -116,13 +90,14 @@ function init() {
       ));
 
     myDiagram.nodeTemplateMap.add("filledOval",
-      $(go.Node, "Table", nodeStyle(),
+      GO(go.Node, "Table", nodeStyle(),
       {
         resizable: true, resizeObjectName: "fOv"},
-        $(go.Panel, "Auto",
-          $(go.Shape, "ellipse",
-            {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
-          $(go.TextBlock,
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "ellipse",
+            {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+          new go.Binding("fill", "fill")),
+          GO(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
             alignmentFocus: new go.Spot(0, 0, -4, -4),
@@ -134,11 +109,11 @@ function init() {
       ));
 
       myDiagram.nodeTemplateMap.add("external",
-        $(go.Node, "Table", nodeStyle(),
-          $(go.Panel, "Auto",
-            $(go.Shape, "square",
+        GO(go.Node, "Table", nodeStyle(),
+          GO(go.Panel, "Auto",
+            GO(go.Shape, "square",
               {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
-            $(go.TextBlock,
+            GO(go.TextBlock,
               "ext",
             {
               alignment: go.Spot.Center,
@@ -150,12 +125,12 @@ function init() {
         ));
 
       myDiagram.nodeTemplateMap.add("LinkLabel",
-        $("Node",
+        GO("Node",
           {
             selectable: false, avoidable: false,
             layerName: "Foreground"
           },
-          $("Shape", "Ellipse",
+          GO("Shape", "Ellipse",
             {
               width: 5, height: 5, stroke: null,
               portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
@@ -163,19 +138,19 @@ function init() {
         ));
 
     myDiagram.linkTemplateMap.add("multiLinks",
-      $("Link",
+      GO("Link",
         { relinkableFrom: true, relinkableTo: true },
-        $("Shape", { stroke: "#2D9945", strokeWidth: 2 })
+        GO("Shape", { stroke: "#2D9945", strokeWidth: 2 })
       ));
 
     myDiagram.model =
-        $(go.GraphLinksModel,
+        GO(go.GraphLinksModel,
           { linkLabelKeysProperty: "labelKeys" });
 
     myDiagram.toolManager.linkingTool.archetypeLabelNodeData = { category: "LinkLabel" };
 
     myDiagram.linkTemplate =
-      $(go.Link,
+      GO(go.Link,
         {
           curve: go.Link.Bezier,
           reshapable: true,
@@ -184,9 +159,9 @@ function init() {
           selectionAdorned: false
         },
         new go.Binding("points").makeTwoWay(),
-        $(go.Shape,
+        GO(go.Shape,
           { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
-        $(go.Shape,
+        GO(go.Shape,
           { isPanelMain: true, stroke: "gray", strokeWidth: 2 },
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
       );
@@ -195,16 +170,28 @@ function init() {
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
     myPalette =
-      $(go.Palette, "myPaletteDiv",
+      GO(go.Palette, "myPaletteDiv",
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
-            { category: "oval", text: "oval", },
-            { category: "filledOval", text: "fillOval" },
+            { category: "oval", text: "oval" },
+            { category: "filledOval", text: "fillOval", fill: ""},
             { category: "dashedBox" },
             { category: "voidBox", text: "box" },
-            { category: "box" , text: "fillBox" },
+            { category: "box" , text: "fillBox", fill: "" },
             { category: "external" }
           ])
         });
+
+        $(function() {
+            $("#draggablePanel").draggable({ handle: "#infoDraggable" });
+            var inspector = new Inspector('Info', myDiagram,
+              {
+                properties: {
+                  "key": { readOnly: true, show: Inspector.showIfPresent },
+                  "fill": { show: Inspector.showIfPresent, type: 'color' }
+                }
+              });
+          });
+
   }
