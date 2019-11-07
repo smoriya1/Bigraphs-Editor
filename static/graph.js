@@ -23,6 +23,13 @@ function init() {
       }
     }
 
+    function cmCommand(e, obj) {
+      var node = obj.part.adornedPart;
+      return
+    }
+
+    var maxLinks = 2;
+
     myDiagram.nodeTemplateMap.add("dashedBox",
       GO(go.Node, "Table", nodeStyle(),
         { resizable: true, resizeObjectName: "dBox", zOrder: -1},
@@ -35,11 +42,15 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("voidBox",
       GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "dRect" },
+        { resizable: true, resizeObjectName: "dRect",
+          linkValidation: function(fromnode, fromport, tonode, toport) {
+            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+        }},
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             {name:"dRect", width: 80, height: 80, fill: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("figure", "figure")),
+            new go.Binding("figure", "figure"),
+            ),
             GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -47,18 +58,22 @@ function init() {
               font: "Bold 10pt Sans-Serif",
               editable: true
             },
-          new go.Binding("text").makeTwoWay())
+              new go.Binding("text").makeTwoWay()),
         ),
       ));
 
     myDiagram.nodeTemplateMap.add("box",
       GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "b" },
+        { resizable: true, resizeObjectName: "b",
+          linkValidation: function(fromnode, fromport, tonode, toport) {
+            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+        }},
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("figure", "figure"),
-            new go.Binding("fill", "fill")),
+            new go.Binding("fill", "fill"),
+            ),
             GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -66,18 +81,20 @@ function init() {
               font: "Bold 10pt Sans-Serif",
               editable: true
             },
-          new go.Binding("text").makeTwoWay())
+          new go.Binding("text").makeTwoWay()),
         ),
     ));
 
-
-
     myDiagram.nodeTemplateMap.add("oval",
       GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "ov" },
+        { resizable: true, resizeObjectName: "ov",
+          linkValidation: function(fromnode, fromport, tonode, toport) {
+            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+          }},
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
-            {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
+            {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            ),
           GO(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
@@ -91,12 +108,15 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("filledOval",
       GO(go.Node, "Table", nodeStyle(),
-      {
-        resizable: true, resizeObjectName: "fOv"},
+      { resizable: true, resizeObjectName: "fOv",
+        linkValidation: function(fromnode, fromport, tonode, toport) {
+          return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+      }},
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-          new go.Binding("fill", "fill")),
+          new go.Binding("fill", "fill"),
+          ),
           GO(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
@@ -174,24 +194,23 @@ function init() {
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           model: new go.GraphLinksModel([
-            { category: "oval", text: "oval" },
-            { category: "filledOval", text: "fillOval", fill: ""},
+            { category: "oval", text: "oval"},
+            { category: "filledOval", text: "fillOval", fill: "#d3d3d3" },
             { category: "dashedBox" },
             { category: "voidBox", text: "box" },
-            { category: "box" , text: "fillBox", fill: "" },
+            { category: "box" , text: "fillBox", fill: "#d3d3d3"},
             { category: "external" }
           ])
         });
 
-        $(function() {
-            $("#draggablePanel").draggable({ handle: "#infoDraggable" });
-            var inspector = new Inspector('Info', myDiagram,
-              {
-                properties: {
-                  "key": { readOnly: true, show: Inspector.showIfPresent },
-                  "fill": { show: Inspector.showIfPresent, type: 'color' }
-                }
-              });
+    $(function() {
+        $("#draggablePanel").draggable({ handle: "#infoDraggable" });
+        var inspector = new Inspector('Info', myDiagram,
+          {
+            properties: {
+              "key": { readOnly: true, show: Inspector.showIfPresent },
+              "fill": { show: Inspector.showIfPresent, type: 'color' }
+            }
           });
-
+      });
   }
