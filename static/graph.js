@@ -4,7 +4,7 @@ function init() {
     myDiagram =
       GO(go.Diagram, "myDiagramDiv",
         {
-          "undoManager.isEnabled": true,
+          "undoManager.isEnabled": true
         });
 
     function nodeStyle() {
@@ -30,13 +30,22 @@ function init() {
 
     var maxLinks = 2;
 
-    myDiagram.nodeTemplateMap.add("dashedBox",
-      GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "dBox", zOrder: -1},
+    myDiagram.groupTemplateMap.add("dashedBox",
+      GO(go.Group, "Table", nodeStyle(),
+        { resizable: true, resizeObjectName: "dBox" },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            {name:"dBox", width: 80, height: 80, fill: "transparent", strokeDashArray: [5,3]},
-            new go.Binding("figure", "figure")),
+            { name:"dBox", width: 80, height: 80, fill: null, strokeDashArray: [5,3]},
+            new go.Binding("figure", "figure")
+          ),
+          GO(go.TextBlock,
+          {
+            alignment: go.Spot.TopLeft,
+            alignmentFocus: new go.Spot(0, 0, -4, -4),
+            font: "Bold 10pt Sans-Serif",
+            editable: true
+          },
+            new go.Binding("text").makeTwoWay()),
         ),
       ));
 
@@ -48,7 +57,7 @@ function init() {
         }},
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            {name:"dRect", width: 80, height: 80, fill: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            {name:"dRect", width: 80, height: 80, fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("figure", "figure"),
             ),
             GO(go.TextBlock,
@@ -196,7 +205,7 @@ function init() {
           model: new go.GraphLinksModel([
             { category: "oval", text: "oval"},
             { category: "filledOval", text: "fillOval", fill: "#d3d3d3" },
-            { category: "dashedBox" },
+            { category: "dashedBox", text:"env", isGroup: true },
             { category: "voidBox", text: "box" },
             { category: "box" , text: "fillBox", fill: "#d3d3d3"},
             { category: "external" }
