@@ -45,10 +45,10 @@ function init() {
         grp.isHighlighted = false;
       }
 
-    var maxLinks = 2;
+    var maxLinks = 3;
 
     myDiagram.groupTemplateMap.add("dashedBox",
-      GO(go.Group, "Auto", nodeStyle(),
+      GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
           background: "transparent",
           resizeObjectName: "dBox",
@@ -75,14 +75,19 @@ function init() {
         ),
       ));
 
-    myDiagram.nodeTemplateMap.add("voidBox",
-      GO(go.Node, "Table", nodeStyle(),
+    myDiagram.groupTemplateMap.add("box",
+      GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
+          background: "transparent",
           resizeObjectName: "dRect",
-          mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+          mouseDrop: finishDrop,
+          mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
+          mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
-        }},
+          }
+        },
+        new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             {name:"dRect", width: 80, height: 80, fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
@@ -99,13 +104,15 @@ function init() {
         ),
       ));
 
-    myDiagram.nodeTemplateMap.add("box",
+    myDiagram.nodeTemplateMap.add("filledBox",
       GO(go.Node, "Table", nodeStyle(),
         { resizable: true,
           resizeObjectName: "b",
+          mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
-        }},
+          }
+        },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
@@ -123,13 +130,19 @@ function init() {
         ),
     ));
 
-    myDiagram.nodeTemplateMap.add("oval",
-      GO(go.Node, "Table", nodeStyle(),
+    myDiagram.groupTemplateMap.add("oval",
+      GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
+          background: "transparent",
           resizeObjectName: "ov",
+          mouseDrop: finishDrop,
+          mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
+          mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
-          }},
+          }
+        },
+        new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "ov", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
@@ -149,9 +162,11 @@ function init() {
       GO(go.Node, "Table", nodeStyle(),
       { resizable: true,
         resizeObjectName: "fOv",
+        mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
         linkValidation: function(fromnode, fromport, tonode, toport) {
           return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
-      }},
+        }
+      },
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
@@ -237,10 +252,10 @@ function init() {
           model: new go.GraphLinksModel([
             { key: "env", category: "dashedBox", text:"env", isGroup: true },
             { key: "ext", category: "external" },
-            { key: "node", category: "oval", text: "node"},
+            { key: "groupNode", category: "oval", text: "gNode", isGroup: true },
             { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3" },
-            { key: "node", category: "voidBox", text: "node" },
-            { key: "node", category: "box" , text: "node", fill: "#d3d3d3"}
+            { key: "groupNode", category: "box", text: "gNode", isGroup: true },
+            { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3"}
           ])
         });
 
