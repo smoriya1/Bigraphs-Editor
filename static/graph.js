@@ -4,7 +4,8 @@ function init() {
     myDiagram =
       GO(go.Diagram, "myDiagramDiv",
         {
-          "undoManager.isEnabled": true
+          "undoManager.isEnabled": true,
+          mouseDrop: function(e) { finishDrop(e, null); }
         });
 
     function nodeStyle() {
@@ -23,16 +24,41 @@ function init() {
       }
     }
 
-    function cmCommand(e, obj) {
-      var node = obj.part.adornedPart;
-      return
-    }
+    function finishDrop(e, grp) {
+        var ok = (grp !== null
+          ? grp.addMembers(grp.diagram.selection, true)
+          : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
+        if (!ok) e.diagram.currentTool.doCancel();
+      }
+
+    function highlightGroup(e, grp, show) {
+        if (!grp) return;
+        e.handled = true;
+        if (show) {
+          var tool = grp.diagram.toolManager.draggingTool;
+          var map = tool.draggedParts || tool.copiedParts;
+          if (grp.canAddMembers(map.toKeySet())) {
+            grp.isHighlighted = true;
+            return;
+          }
+        }
+        grp.isHighlighted = false;
+      }
 
     var maxLinks = 2;
 
     myDiagram.groupTemplateMap.add("dashedBox",
-      GO(go.Group, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "dBox" },
+      GO(go.Group, "Auto", nodeStyle(),
+        { resizable: true,
+          background: "transparent",
+          resizeObjectName: "dBox",
+          computesBoundsAfterDrag: true,
+          mouseDrop: finishDrop,
+          handlesDragDropForMembers: true,
+          mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
+          mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+        },
+        new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             { name:"dBox", width: 80, height: 80, fill: null, strokeDashArray: [5,3]},
@@ -51,7 +77,9 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("voidBox",
       GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "dRect",
+        { resizable: true,
+          resizeObjectName: "dRect",
+          mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
         }},
@@ -73,7 +101,8 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("box",
       GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "b",
+        { resizable: true,
+          resizeObjectName: "b",
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
         }},
@@ -96,13 +125,14 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("oval",
       GO(go.Node, "Table", nodeStyle(),
-        { resizable: true, resizeObjectName: "ov",
+        { resizable: true,
+          resizeObjectName: "ov",
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
           }},
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
-            {name: "ov", width: 80, height: 80, fill: "transparent", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            {name: "ov", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             ),
           GO(go.TextBlock,
           {
@@ -117,7 +147,8 @@ function init() {
 
     myDiagram.nodeTemplateMap.add("filledOval",
       GO(go.Node, "Table", nodeStyle(),
-      { resizable: true, resizeObjectName: "fOv",
+      { resizable: true,
+        resizeObjectName: "fOv",
         linkValidation: function(fromnode, fromport, tonode, toport) {
           return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
       }},
@@ -202,13 +233,14 @@ function init() {
       GO(go.Palette, "myPaletteDiv",
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
+          groupTemplateMap: myDiagram.groupTemplateMap,
           model: new go.GraphLinksModel([
-            { category: "oval", text: "oval"},
-            { category: "filledOval", text: "fillOval", fill: "#d3d3d3" },
-            { category: "dashedBox", text:"env", isGroup: true },
-            { category: "voidBox", text: "box" },
-            { category: "box" , text: "fillBox", fill: "#d3d3d3"},
-            { category: "external" }
+            { key: "env", category: "dashedBox", text:"env", isGroup: true },
+            { key: "ext", category: "external" },
+            { key: "node", category: "oval", text: "node"},
+            { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3" },
+            { key: "node", category: "voidBox", text: "node" },
+            { key: "node", category: "box" , text: "node", fill: "#d3d3d3"}
           ])
         });
 
