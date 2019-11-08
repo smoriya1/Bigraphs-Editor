@@ -64,14 +64,6 @@ function init() {
             { name:"dBox", width: 80, height: 80, fill: null, strokeDashArray: [5,3]},
             new go.Binding("figure", "figure")
           ),
-          GO(go.TextBlock,
-          {
-            alignment: go.Spot.TopLeft,
-            alignmentFocus: new go.Spot(0, 0, -4, -4),
-            font: "Bold 10pt Sans-Serif",
-            editable: true
-          },
-            new go.Binding("text").makeTwoWay()),
         ),
       ));
 
@@ -297,20 +289,44 @@ function init() {
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
+// For Debugging
+/*
+    shiftNode = (function() {
+      myDiagram.commit(function(d) {
+        var data = d.model;
+        console.log(data);
+      })
+    });
+
+    myDiagram.nodeTemplateMap.add("button",
+    GO(go.Node, "Auto",
+    GO(go.Shape, "Rectangle",
+      { fill: "gold" }),
+    GO(go.Panel, "Vertical",
+      { margin: 3 },
+      GO("Button",
+        { margin: 2,
+          click: shiftNode },
+        GO(go.TextBlock, "Click me!")),
+    ),
+  ));
+  */
+
     myPalette =
       GO(go.Palette, "myPaletteDiv",
         {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           groupTemplateMap: myDiagram.groupTemplateMap,
           model: new go.GraphLinksModel([
-            { key: "env", category: "dashedBox", text:"env", isGroup: true },
+            { key: "env", category: "dashedBox", isGroup: true },
             { key: "ext", category: "external" },
             { key: "groupNode", category: "oval", text: "gNode", isGroup: true },
             { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3" },
             { key: "groupNode", category: "box", text: "gNode", isGroup: true },
             { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3"},
             { key: "groupNode", category: "hex", text: "gNode", isGroup: true },
-            { key: "node", category: "filledHex" , text: "node", fill: "#d3d3d3"}
+            { key: "node", category: "filledHex" , text: "node", fill: "#d3d3d3"},
+            //{ category: "button" }
           ])
         });
 
@@ -320,6 +336,8 @@ function init() {
           {
             properties: {
               "key": { readOnly: true, show: Inspector.showIfPresent },
+              "category": { readOnly: true, show: Inspector.showIfPresent },
+              "isGroup": { readOnly: true, show: Inspector.showIfPresent },
               "fill": { show: Inspector.showIfPresent, type: 'color' }
             }
           });
