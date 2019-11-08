@@ -183,6 +183,59 @@ function init() {
         ),
       ));
 
+    myDiagram.groupTemplateMap.add("hex",
+      GO(go.Group, "Table", nodeStyle(),
+        { resizable: true,
+          background: "transparent",
+          resizeObjectName: "hx",
+          mouseDrop: finishDrop,
+          mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
+          mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+          linkValidation: function(fromnode, fromport, tonode, toport) {
+            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+          }
+        },
+        new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "Hexagon",
+            {name: "hx", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            ),
+          GO(go.TextBlock,
+          {
+            alignment: go.Spot.TopLeft,
+            alignmentFocus: new go.Spot(0, 0, -4, -4),
+            font: "Bold 10pt Sans-Serif",
+            editable: true
+          },
+          new go.Binding("text").makeTwoWay())
+        ),
+      ));
+
+      myDiagram.nodeTemplateMap.add("filledHex",
+        GO(go.Node, "Table", nodeStyle(),
+        { resizable: true,
+          resizeObjectName: "fHx",
+          mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+          linkValidation: function(fromnode, fromport, tonode, toport) {
+            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+          }
+        },
+          GO(go.Panel, "Auto",
+            GO(go.Shape, "Hexagon",
+              {name: "fHx", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("fill", "fill"),
+            ),
+            GO(go.TextBlock,
+            {
+              alignment: go.Spot.TopLeft,
+              alignmentFocus: new go.Spot(0, 0, -4, -4),
+              font: "Bold 10pt Sans-Serif",
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+          ),
+        ));
+
       myDiagram.nodeTemplateMap.add("external",
         GO(go.Node, "Table", nodeStyle(),
           GO(go.Panel, "Auto",
@@ -255,7 +308,9 @@ function init() {
             { key: "groupNode", category: "oval", text: "gNode", isGroup: true },
             { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3" },
             { key: "groupNode", category: "box", text: "gNode", isGroup: true },
-            { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3"}
+            { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3"},
+            { key: "groupNode", category: "hex", text: "gNode", isGroup: true },
+            { key: "node", category: "filledHex" , text: "node", fill: "#d3d3d3"}
           ])
         });
 
