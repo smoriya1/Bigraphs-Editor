@@ -75,15 +75,18 @@ function init() {
           mouseDrop: finishDrop,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
           }
+          */
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             {name:"dRect", width: 80, height: 80, fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("figure", "figure"),
+            new go.Binding("fromMaxLinks", "maxLinks"),
+            new go.Binding("toMaxLinks", "maxLinks"),
             ),
             GO(go.TextBlock,
             {
@@ -101,15 +104,19 @@ function init() {
         { resizable: true,
           resizeObjectName: "b",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
           }
+          */
         },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("figure", "figure"),
+            //new go.Binding("figure", "figure"),
             new go.Binding("fill", "fill"),
+            new go.Binding("fromMaxLinks", "maxLinks"),
+            new go.Binding("toMaxLinks", "maxLinks"),
             ),
             GO(go.TextBlock,
             {
@@ -130,14 +137,18 @@ function init() {
           mouseDrop: finishDrop,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
           }
+          */
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "ov", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("fromMaxLinks", "maxLinks"),
+            new go.Binding("toMaxLinks", "maxLinks"),
             ),
           GO(go.TextBlock,
           {
@@ -155,14 +166,18 @@ function init() {
       { resizable: true,
         resizeObjectName: "fOv",
         mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+        /*
         linkValidation: function(fromnode, fromport, tonode, toport) {
           return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
         }
+        */
       },
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
           new go.Binding("fill", "fill"),
+          new go.Binding("fromMaxLinks", "maxLinks"),
+          new go.Binding("toMaxLinks", "maxLinks"),
           ),
           GO(go.TextBlock,
           {
@@ -183,14 +198,18 @@ function init() {
           mouseDrop: finishDrop,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
+          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
           }
+          */
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Hexagon",
             {name: "hx", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("fromMaxLinks", "maxLinks"),
+            new go.Binding("toMaxLinks", "maxLinks"),
             ),
           GO(go.TextBlock,
           {
@@ -208,14 +227,18 @@ function init() {
         { resizable: true,
           resizeObjectName: "fHx",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
             return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
           }
+          */
         },
           GO(go.Panel, "Auto",
             GO(go.Shape, "Hexagon",
               {name: "fHx", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("fill", "fill"),
+            new go.Binding("fromMaxLinks", "maxLinks"),
+            new go.Binding("toMaxLinks", "maxLinks"),
             ),
             GO(go.TextBlock,
             {
@@ -278,7 +301,7 @@ function init() {
           mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; },
           selectionAdorned: false
         },
-        new go.Binding("points").makeTwoWay(),
+        //new go.Binding("points").makeTwoWay(),
         GO(go.Shape,
           { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
         GO(go.Shape,
@@ -310,7 +333,7 @@ function init() {
         GO(go.TextBlock, "Click me!")),
     ),
   ));
-  */
+*/
 
     myPalette =
       GO(go.Palette, "myPaletteDiv",
@@ -335,10 +358,12 @@ function init() {
         var inspector = new Inspector('Info', myDiagram,
           {
             properties: {
-              "key": { readOnly: true, show: Inspector.showIfPresent },
+              key: { readOnly: true, show: Inspector.showIfPresent },
               "category": { readOnly: true, show: Inspector.showIfPresent },
               "isGroup": { readOnly: true, show: Inspector.showIfPresent },
-              "fill": { show: Inspector.showIfPresent, type: 'color' }
+              "fill": { show: Inspector.showIfPresent, type: 'color' },
+              maxLinks: { type: "number", defaultValue: Infinity, show: Inspector.showIfNode }
+              //maxLinks2: { type: "number", defaultValue: 2, show: Inspector.showIfNode }
             }
           });
       });
