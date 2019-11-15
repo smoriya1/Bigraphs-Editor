@@ -75,18 +75,14 @@ function init() {
           mouseDrop: finishDrop,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
-          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
           }
-          */
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            {name:"dRect", width: 80, height: 80, fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("fromMaxLinks", "maxLinks"),
-            new go.Binding("toMaxLinks", "maxLinks"),
+            {name:"dRect", width: 80, height: 80, fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}
             ),
             GO(go.TextBlock,
             {
@@ -104,19 +100,14 @@ function init() {
         { resizable: true,
           resizeObjectName: "b",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
           }
-          */
         },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
             { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            //new go.Binding("figure", "figure"),
-            new go.Binding("fill", "fill"),
-            new go.Binding("fromMaxLinks", "maxLinks"),
-            new go.Binding("toMaxLinks", "maxLinks"),
+            new go.Binding("fill", "fill")
             ),
             GO(go.TextBlock,
             {
@@ -137,18 +128,14 @@ function init() {
           mouseDrop: finishDrop,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
-          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
           }
-          */
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "ov", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("fromMaxLinks", "maxLinks"),
-            new go.Binding("toMaxLinks", "maxLinks"),
             ),
           GO(go.TextBlock,
           {
@@ -166,18 +153,14 @@ function init() {
       { resizable: true,
         resizeObjectName: "fOv",
         mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-        /*
         linkValidation: function(fromnode, fromport, tonode, toport) {
-          return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+          return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
         }
-        */
       },
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
             {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-          new go.Binding("fill", "fill"),
-          new go.Binding("fromMaxLinks", "maxLinks"),
-          new go.Binding("toMaxLinks", "maxLinks"),
+          new go.Binding("fill", "fill")
           ),
           GO(go.TextBlock,
           {
@@ -198,18 +181,14 @@ function init() {
           mouseDrop: finishDrop,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
-          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
           }
-          */
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Hexagon",
-            {name: "hx", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("fromMaxLinks", "maxLinks"),
-            new go.Binding("toMaxLinks", "maxLinks"),
+            {name: "hx", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}
             ),
           GO(go.TextBlock,
           {
@@ -227,18 +206,15 @@ function init() {
         { resizable: true,
           resizeObjectName: "fHx",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-          /*
           linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < maxLinks;
+            console.log(fromnode.data.maxLinks);
+            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
           }
-          */
         },
           GO(go.Panel, "Auto",
             GO(go.Shape, "Hexagon",
               {name: "fHx", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("fill", "fill"),
-            new go.Binding("fromMaxLinks", "maxLinks"),
-            new go.Binding("toMaxLinks", "maxLinks"),
+            new go.Binding("fill", "fill")
             ),
             GO(go.TextBlock,
             {
@@ -301,7 +277,6 @@ function init() {
           mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; },
           selectionAdorned: false
         },
-        //new go.Binding("points").makeTwoWay(),
         GO(go.Shape,
           { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
         GO(go.Shape,
@@ -343,12 +318,12 @@ function init() {
           model: new go.GraphLinksModel([
             { key: "env", category: "dashedBox", isGroup: true },
             { key: "ext", category: "external" },
-            { key: "groupNode", category: "oval", text: "gNode", isGroup: true },
-            { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3" },
-            { key: "groupNode", category: "box", text: "gNode", isGroup: true },
-            { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3"},
-            { key: "groupNode", category: "hex", text: "gNode", isGroup: true },
-            { key: "node", category: "filledHex" , text: "node", fill: "#d3d3d3"},
+            { key: "groupNode", category: "oval", text: "gNode", isGroup: true, maxLinks: Infinity },
+            { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "groupNode", category: "box", text: "gNode", isGroup: true, maxLinks: Infinity },
+            { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "groupNode", category: "hex", text: "gNode", isGroup: true, maxLinks: Infinity },
+            { key: "node", category: "filledHex" , text: "node", fill: "#d3d3d3", maxLinks: Infinity },
             //{ category: "button" }
           ])
         });
@@ -362,8 +337,7 @@ function init() {
               "category": { readOnly: true, show: Inspector.showIfPresent },
               "isGroup": { readOnly: true, show: Inspector.showIfPresent },
               "fill": { show: Inspector.showIfPresent, type: 'color' },
-              maxLinks: { type: "number", defaultValue: Infinity, show: Inspector.showIfNode }
-              //maxLinks2: { type: "number", defaultValue: 2, show: Inspector.showIfNode }
+              maxLinks: { type: "number", show: Inspector.showIfNode }
             }
           });
       });
