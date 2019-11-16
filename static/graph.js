@@ -106,7 +106,7 @@ function init() {
         },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" },
             new go.Binding("fill", "fill")
             ),
             GO(go.TextBlock,
@@ -318,12 +318,12 @@ function init() {
           model: new go.GraphLinksModel([
             { key: "env", category: "dashedBox", isGroup: true },
             { key: "ext", category: "external" },
-            { key: "groupNode", category: "oval", text: "gNode", isGroup: true, maxLinks: Infinity },
-            { key: "node", category: "filledOval", text: "node", fill: "#d3d3d3", maxLinks: Infinity },
-            { key: "groupNode", category: "box", text: "gNode", isGroup: true, maxLinks: Infinity },
-            { key: "node", category: "filledBox" , text: "node", fill: "#d3d3d3", maxLinks: Infinity },
-            { key: "groupNode", category: "hex", text: "gNode", isGroup: true, maxLinks: Infinity },
-            { key: "node", category: "filledHex" , text: "node", fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "gOval", category: "oval", text: "gOval", isGroup: true, maxLinks: Infinity },
+            { key: "oval", category: "filledOval", text: "oval", fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "gBox", category: "box", text: "gBox", isGroup: true, maxLinks: Infinity },
+            { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
+            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
             //{ category: "button" }
           ])
         });
