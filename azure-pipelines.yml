@@ -43,6 +43,7 @@ steps:
   displayName: 'Install prerequisites'
 
 - script: |
+   sudo chown -R $USER /usr/local/lib/node_modules
    npm install -g jshint
    cd static
    jshint graph.js
