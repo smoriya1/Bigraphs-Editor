@@ -1,70 +1,48 @@
-.block {
-    display: block;
-    float: left;
-    background-color: #ccc;
-    text-align: center;
-    line-height: 50px;
-    text-decoration: none;
+#mainDiv{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
 }
 
-#bsq {
-  background-color: #99e;
-  z-index: 1;
-  border-radius: 1em;
-  border: solid 3px black;
-  height: 150px;
-  width: 150px;
-  color: #fff;
-  left: 10px;
-  top: 30px;
-  box-sizing: border-box;
-  position: absolute;
+ #myDiagramDiv{
+   flex-grow: 1;
+   height: 750px;
+   border: solid 1px black;
+ }
+
+#myPaletteDiv{
+  width: 100px;
+  margin-right: 2px;
+  background-color: whitesmoke;
+  border: solid 1px black;
 }
 
-#bdsq {
-  height: 200px;
-  width: 300px;
-  border: dashed 4px transparent;
-  border-radius: 1em;
-  border-color: #000;
-  left: 200px;
-  top: 30px;
-  box-sizing: border-box;
-  position: absolute;
-}
-
-#bdov {
-  height: 200px;
-  width: 200px;
-  left: 600px;
-  top: 30px;
-  border: dashed 4px transparent;
-  border-color: #000;
-  border-radius: 1em;
-  border-radius: 50%;
+.draggable {
   display: inline-block;
+  vertical-align: top;
+  padding: 5px;
+  top: 20px;
+  left: 300px;
+  border: 4px solid #BBB;
+  border-radius: 4px;
+  background-color: #F5F5F5;
   position: absolute;
+  z-index: 500;
 }
 
-#env {
-  width:500px;
-  height:500px;
-  background-color: #DAE4E4;
-  position: absolute;
-  left: 10px;
-  top: 100px;
-  box-sizing: border-box;
+.handle {
+  background-color: lightblue;
+  cursor: move;
+  text-align: center;
+  font: bold 12px sans-serif;
 }
 
-.dragging {
-  border-color: #aaa;
+#draggablePanel {
+  font: 12px helvetica, sans-serif;
+  min-width: 213px;
 }
 
-.drop-target{
-  background-color: #29e;
-  border-color: #fff;
-}
-
-#bsq.can-drop{
-  background-color: #4e4;
+#Info {
+  width: 100%;
+  overflow: hidden;
 }

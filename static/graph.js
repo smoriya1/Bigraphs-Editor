@@ -341,7 +341,7 @@ function init() {
             { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
             { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
-            { category: "button" }
+            //{ category: "button" }
           ])
         });
 
