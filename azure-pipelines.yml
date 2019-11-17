@@ -44,7 +44,7 @@ steps:
 
 - script: |
    sudo chown -R $USER /usr/local/lib/node_modules
-   npm install -g jshint
+   sudo npm install -g jshint
    cd static
    jshint graph.js
   displayName: 'Lint'
