@@ -43,11 +43,10 @@ steps:
   displayName: 'Install prerequisites'
 
 - script: |
-   pwd
-   ls
+   npm install -g jshint
    cd static
    jshint graph.js
-   displayName: 'Lint'
+  displayName: 'Lint'
   
 - task: PublishTestResults@2
   inputs:
