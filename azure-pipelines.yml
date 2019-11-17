@@ -33,7 +33,6 @@ steps:
       if not manage_py:
           raise SystemExit('Could not find a Django project')
       project_location = path.dirname(path.abspath(manage_py))
-      print(project_location)
       print('Found Django project in', project_location)
       print('##vso[task.setvariable variable=projectRoot]{}'.format(project_location))
 
@@ -43,10 +42,12 @@ steps:
     pip install unittest-xml-reporting
   displayName: 'Install prerequisites'
 
-#- script: |
-#   cd static
-#    jshint graph.js
-#  displayName: 'Lint'
+- script: |
+   pwd
+   ls
+   cd static
+   jshint graph.js
+   displayName: 'Lint'
   
 - task: PublishTestResults@2
   inputs:
