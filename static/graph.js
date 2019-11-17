@@ -207,7 +207,6 @@ function init() {
           resizeObjectName: "fHx",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
-            console.log(fromnode.data.maxLinks);
             return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
           }
         },
@@ -295,6 +294,24 @@ function init() {
         console.log(data);
       })
     });
+    */
+    shiftNode = (function() {
+        myDiagram.nodes.each(function(n) {
+      //console.log(n.data);
+        var node = n.part;
+        //if(node.containingGroup != null) {
+          //console.log(node.containingGroup.key);
+          node.findNodesConnected().each(function(n) {
+            console.log(node.key, " : ",n.key);
+          });
+        //}
+        /*
+        node.findNodesConnected().each(function(n) {
+          console.log(n.containingGroup.key);
+        });
+        */
+      });
+    });
 
     myDiagram.nodeTemplateMap.add("button",
     GO(go.Node, "Auto",
@@ -308,7 +325,7 @@ function init() {
         GO(go.TextBlock, "Click me!")),
     ),
   ));
-*/
+
 
     myPalette =
       GO(go.Palette, "myPaletteDiv",
@@ -324,7 +341,7 @@ function init() {
             { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
             { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
-            //{ category: "button" }
+            { category: "button" }
           ])
         });
 
