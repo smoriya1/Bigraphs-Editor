@@ -21,12 +21,11 @@ function init() {
       return {
         font: "bold 11pt Helvetica, Arial, sans-serif",
         stroke: "whitesmoke"
-      }
+      };
     }
 
     function finishDrop(e, grp) {
-        var ok = (grp !== null
-          ? grp.addMembers(grp.diagram.selection, true)
+        var ok = (grp !== null ? grp.addMembers(grp.diagram.selection, true)
           : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
         if (!ok) e.diagram.currentTool.doCancel();
       }
@@ -286,30 +285,23 @@ function init() {
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
-// For Debugging
-/*
-    shiftNode = (function() {
-      myDiagram.commit(function(d) {
-        var data = d.model;
-        console.log(data);
-      })
-    });
-    */
     shiftNode = (function() {
         myDiagram.nodes.each(function(n) {
-      //console.log(n.data);
         var node = n.part;
-        //if(node.containingGroup != null) {
-          //console.log(node.containingGroup.key);
+        if(node.containingGroup != null) {
+          if (!node.containingGroup.key.includes("env")){
+            console.log(node.nb.text," -> ",node.containingGroup.nb.text);
+          }
+          else {
+            console.log(node.nb.text," -> ",node.containingGroup.key);
+          }
+
+          /*
           node.findNodesConnected().each(function(n) {
-            console.log(node.key, " : ",n.key);
+            console.log(node.key, " connected to ",n.key);
           });
-        //}
-        /*
-        node.findNodesConnected().each(function(n) {
-          console.log(n.containingGroup.key);
-        });
-        */
+          */
+        }
       });
     });
 
