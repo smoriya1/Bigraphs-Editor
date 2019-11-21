@@ -54,7 +54,7 @@ function init() {
           mouseDrop: finishDrop,
           handlesDragDropForMembers: true,
           memberAdded: updateDict,
-          memberRemoved: deleteDict,
+          //memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
         },
@@ -73,7 +73,7 @@ function init() {
           resizeObjectName: "dRect",
           mouseDrop: finishDrop,
           memberAdded: updateDict,
-          memberRemoved: deleteDict,
+          //memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -128,7 +128,7 @@ function init() {
           resizeObjectName: "ov",
           mouseDrop: finishDrop,
           memberAdded: updateDict,
-          memberRemoved: deleteDict,
+          //memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -183,7 +183,7 @@ function init() {
           resizeObjectName: "hx",
           mouseDrop: finishDrop,
           memberAdded: updateDict,
-          memberRemoved: deleteDict,
+          //memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -320,8 +320,10 @@ function init() {
       console.log(tree);
     }
 
-    function deleteDict(group, part) {
-
+    function findNode(){
+      myDiagram.nodes.each(function(n) {
+        console.log("nodes: ",n.data);
+      });
     }
 
     function deleteDuplicate(obj, key){
@@ -334,7 +336,7 @@ function init() {
         }
         if(obj[x].children){
            for(var i=0;i<obj[x].children.length;i++)
-               deleteDuplicate(obj[x].children[i]);
+               deleteDuplicate(obj[x].children, key);
         }
       }
     }
