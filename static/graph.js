@@ -61,8 +61,7 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            { name:"dBox", width: 80, height: 80, fill: null, strokeDashArray: [5,3]},
-            new go.Binding("figure", "figure")
+            { name:"dBox", width: 80, height: 80, fill: null, strokeDashArray: [5,3]}
           ),
         ),
       ));
@@ -120,7 +119,7 @@ function init() {
             },
           new go.Binding("text").makeTwoWay()),
         ),
-    ));
+      ));
 
     myDiagram.groupTemplateMap.add("oval",
       GO(go.Group, "Table", nodeStyle(),
@@ -207,58 +206,71 @@ function init() {
         ),
       ));
 
-      myDiagram.nodeTemplateMap.add("filledHex",
-        GO(go.Node, "Table", nodeStyle(),
-        { resizable: true,
-          resizeObjectName: "fHx",
-          mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-          linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-          }
-        },
-          GO(go.Panel, "Auto",
-            GO(go.Shape, "Hexagon",
-              {name: "fHx", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-            new go.Binding("fill", "fill")
-            ),
-            GO(go.TextBlock,
-            {
-              alignment: go.Spot.TopLeft,
-              alignmentFocus: new go.Spot(0, 0, -4, -4),
-              font: "Bold 10pt Sans-Serif",
-              editable: true
-            },
-            new go.Binding("text").makeTwoWay())
+    myDiagram.nodeTemplateMap.add("filledHex",
+      GO(go.Node, "Table", nodeStyle(),
+      { resizable: true,
+        resizeObjectName: "fHx",
+        mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+        linkValidation: function(fromnode, fromport, tonode, toport) {
+          return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
+        }
+      },
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "Hexagon",
+            {name: "fHx", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+          new go.Binding("fill", "fill")
           ),
-        ));
-
-      myDiagram.nodeTemplateMap.add("external",
-        GO(go.Node, "Table", nodeStyle(),
-          GO(go.Panel, "Auto",
-            GO(go.Shape, "square",
-              {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
-            GO(go.TextBlock,
-              "ext",
-            {
-              alignment: go.Spot.Center,
-              font: "Bold 10pt Sans-Serif",
-              editable: true
-            },
-            new go.Binding("text").makeTwoWay())
-          ),
-        ));
-
-      myDiagram.nodeTemplateMap.add("LinkLabel",
-        GO("Node",
+          GO(go.TextBlock,
           {
-            selectable: false, avoidable: false,
-            layerName: "Foreground"
+            alignment: go.Spot.TopLeft,
+            alignmentFocus: new go.Spot(0, 0, -4, -4),
+            font: "Bold 10pt Sans-Serif",
+            editable: true
           },
-          GO("Shape", "Ellipse",
-            {
-              width: 5, height: 5, stroke: null,
-              portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
-            })
+          new go.Binding("text").makeTwoWay())
+        ),
+      ));
+
+    myDiagram.nodeTemplateMap.add("external",
+      GO(go.Node, "Table", nodeStyle(),
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "square",
+            {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
+          GO(go.TextBlock,
+            "ext",
+          {
+            alignment: go.Spot.Center,
+            font: "Bold 10pt Sans-Serif",
+            editable: true
+          },
+          new go.Binding("text").makeTwoWay())
+        ),
+      ));
+
+    myDiagram.nodeTemplateMap.add("LinkLabel",
+      GO("Node",
+        {
+          selectable: false,
+          avoidable: false,
+          layerName: "Foreground"
+        },
+        GO("Shape", "Ellipse",
+          {
+            width: 5, height: 5, stroke: null,
+            portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
+          })
+      ));
+
+    myDiagram.nodeTemplateMap.add("id",
+      GO(go.Node, "Table", nodeStyle(),
+        {
+          resizable: true,
+          resizeObjectName: "id"
+        },
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "roundedRectangle",
+            { name: "id", fill: "#A9A9A9", width: 80, height: 80, strokeDashArray: [5,3]})
+          ),
         ));
 
     myDiagram.linkTemplateMap.add("multiLinks",
@@ -295,7 +307,14 @@ function init() {
     var tree = [];
 
     function updateDict(group, part) {
-
+      //var temp = findObjectById(group, k);
+      console.log(group.key);
+      var temp = findObjectById(tree, group.key);
+      temp.children.push({
+        key: part.key,
+        children: []
+      });
+      console.log(tree);
       /*
       var tmp = {[part.key]: null};
       dict[group.containingGroup.key] = tmp;
@@ -313,12 +332,14 @@ function init() {
     }
 
     function addEntryFromPalette(e) {
+      console.log(e.subject.cf.key.nb.key);
       if (!(e.subject.cf.key.part.containingGroup)){
         tree.push({
           key: e.subject.cf.key.nb.key,
           children: []
         });
       }
+      /*
       else{
         var temp = findObjectById(tree, e.subject.cf.key.part.containingGroup.key);
         temp.children.push({
@@ -326,6 +347,9 @@ function init() {
           children: []
         });
       }
+      */
+      //If straight from palette no duplicates
+      console.log(tree);
     }
 
     function findObjectById(obj, k) {
@@ -384,20 +408,6 @@ function init() {
     });
     */
 
-    myDiagram.nodeTemplateMap.add("button",
-    GO(go.Node, "Auto",
-    GO(go.Shape, "Rectangle",
-      { fill: "gold" }),
-    GO(go.Panel, "Vertical",
-      { margin: 3 },
-      GO("Button",
-        { margin: 2,
-          click: shiftNode },
-        GO(go.TextBlock, "Click me!")),
-    ),
-  ));
-
-
     myPalette =
       GO(go.Palette, "myPaletteDiv",
         {
@@ -405,14 +415,14 @@ function init() {
           groupTemplateMap: myDiagram.groupTemplateMap,
           model: new go.GraphLinksModel([
             { key: "env", category: "dashedBox", isGroup: true },
+            { key: "id", category: "id" },
             { key: "ext", category: "external" },
             { key: "gOval", category: "oval", text: "gOval", isGroup: true, maxLinks: Infinity },
             { key: "oval", category: "filledOval", text: "oval", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gBox", category: "box", text: "gBox", isGroup: true, maxLinks: Infinity },
             { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
-            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
-            { category: "button" }
+            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity }
           ])
         });
 
