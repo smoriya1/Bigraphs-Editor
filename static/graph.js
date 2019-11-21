@@ -5,8 +5,8 @@ function init() {
       GO(go.Diagram, "myDiagramDiv",
         {
           "undoManager.isEnabled": true,
-          mouseDrop: function(e) { finishDrop(e, null); }
-          //ExternalObjectsDropped: test
+          mouseDrop: function(e) { finishDrop(e, null); },
+          ExternalObjectsDropped: addInitialEntry
         });
 
     function nodeStyle() {
@@ -44,8 +44,6 @@ function init() {
         }
         grp.isHighlighted = false;
       }
-
-    var dict = [{}];
 
     myDiagram.groupTemplateMap.add("dashedBox",
       GO(go.Group, "Table", nodeStyle(),
@@ -293,12 +291,8 @@ function init() {
 
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
-    /*
-    myDiagram.addDiagramListener("ExternalObjectsDropped",
-      function (e) {
-          console.log(e.subject.part);
-      });
-      **/
+
+    var tree = [];
 
     function updateDict(group, part) {
       /*
@@ -317,12 +311,14 @@ function init() {
 
     }
 
-/*
-    function test(e) {
-      console.log(e.subject.part);
+    function addInitialEntry(e) {
+      if (!(e.subject.cf.key.part.containingGroup)){
+        tree.push({
+          key: e.subject.cf.key.nb.key,
+          children: []
+        });
+      }
     }
-    */
-
 
     function findObjectById(obj, k) {
       for (var x in obj) {
