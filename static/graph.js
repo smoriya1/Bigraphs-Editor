@@ -6,7 +6,7 @@ function init() {
         {
           "undoManager.isEnabled": true,
           mouseDrop: function(e) { finishDrop(e, null); },
-          ExternalObjectsDropped: addInitialEntry
+          ExternalObjectsDropped: addEntryFromPalette
         });
 
     function nodeStyle() {
@@ -295,6 +295,7 @@ function init() {
     var tree = [];
 
     function updateDict(group, part) {
+
       /*
       var tmp = {[part.key]: null};
       dict[group.containingGroup.key] = tmp;
@@ -311,9 +312,16 @@ function init() {
 
     }
 
-    function addInitialEntry(e) {
+    function addEntryFromPalette(e) {
       if (!(e.subject.cf.key.part.containingGroup)){
         tree.push({
+          key: e.subject.cf.key.nb.key,
+          children: []
+        });
+      }
+      else{
+        var temp = findObjectById(tree, e.subject.cf.key.part.containingGroup.key);
+        temp.children.push({
           key: e.subject.cf.key.nb.key,
           children: []
         });
@@ -323,8 +331,7 @@ function init() {
     function findObjectById(obj, k) {
       for (var x in obj) {
           if (obj[x].key == k) {
-            console.log(obj[x].key);
-            return obj[x].key;
+            return obj[x];
           }
           else if (obj[x].children.length){
             for (var x2 in obj[x].children){
