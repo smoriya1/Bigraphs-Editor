@@ -255,10 +255,8 @@ function init() {
           layerName: "Foreground"
         },
         GO("Shape", "Ellipse",
-          {
-            width: 5, height: 5, stroke: null,
-            portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"
-          })
+          { width: 5, height: 5, stroke: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" }
+        )
       ));
 
     myDiagram.nodeTemplateMap.add("id",
@@ -307,49 +305,48 @@ function init() {
     var tree = [];
 
     function updateDict(group, part) {
-      //var temp = findObjectById(group, k);
-      console.log(group.key);
+      var cpy = findObjectById(tree, part.key);
       var temp = findObjectById(tree, group.key);
-      temp.children.push({
-        key: part.key,
-        children: []
-      });
+      if (cpy){
+        deleteDuplicate(tree, part.key);
+        temp.children.push(cpy);
+      }
+      else{
+        temp.children.push({
+          key: part.key,
+          children: []
+        });
+      }
       console.log(tree);
-      /*
-      var tmp = {[part.key]: null};
-      dict[group.containingGroup.key] = tmp;
-      */
-      /*
-      console.log(group.key);
-      var res = findEntry(dict,group.key);
-      console.log(res);
-      */
-
     }
 
     function deleteDict(group, part) {
 
     }
 
+    function deleteDuplicate(obj, key){
+      for (var x in obj){
+        if (obj[x].key == key){
+          if (x > -1) {
+            obj.splice(x, 1);
+            return null;
+          }
+        }
+        if(obj[x].children){
+           for(var i=0;i<obj[x].children.length;i++)
+               deleteDuplicate(obj[x].children[i]);
+        }
+      }
+    }
+
     function addEntryFromPalette(e) {
-      console.log(e.subject.cf.key.nb.key);
       if (!(e.subject.cf.key.part.containingGroup)){
         tree.push({
           key: e.subject.cf.key.nb.key,
           children: []
         });
+        console.log(tree);
       }
-      /*
-      else{
-        var temp = findObjectById(tree, e.subject.cf.key.part.containingGroup.key);
-        temp.children.push({
-          key: e.subject.cf.key.nb.key,
-          children: []
-        });
-      }
-      */
-      //If straight from palette no duplicates
-      console.log(tree);
     }
 
     function findObjectById(obj, k) {
