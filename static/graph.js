@@ -6,13 +6,14 @@ function init() {
         {
           "undoManager.isEnabled": true,
           mouseDrop: function(e) { finishDrop(e, null); }
+          //ExternalObjectsDropped: test
         });
 
     function nodeStyle() {
       return [
         new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
         {
-          locationSpot: go.Spot.Center
+          locationSpot: go.Spot.Center,
         }
       ];
     }
@@ -44,7 +45,7 @@ function init() {
         grp.isHighlighted = false;
       }
 
-    var maxLinks = 3;
+    var dict = [{}];
 
     myDiagram.groupTemplateMap.add("dashedBox",
       GO(go.Group, "Table", nodeStyle(),
@@ -54,6 +55,8 @@ function init() {
           computesBoundsAfterDrag: true,
           mouseDrop: finishDrop,
           handlesDragDropForMembers: true,
+          memberAdded: updateDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
         },
@@ -72,6 +75,8 @@ function init() {
           background: "transparent",
           resizeObjectName: "dRect",
           mouseDrop: finishDrop,
+          memberAdded: updateDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -125,6 +130,8 @@ function init() {
           background: "transparent",
           resizeObjectName: "ov",
           mouseDrop: finishDrop,
+          memberAdded: updateDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -178,6 +185,8 @@ function init() {
           background: "transparent",
           resizeObjectName: "hx",
           mouseDrop: finishDrop,
+          memberAdded: updateDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -284,10 +293,78 @@ function init() {
 
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
+    /*
+    myDiagram.addDiagramListener("ExternalObjectsDropped",
+      function (e) {
+          console.log(e.subject.part);
+      });
+      **/
+
+    function updateDict(group, part) {
+      /*
+      var tmp = {[part.key]: null};
+      dict[group.containingGroup.key] = tmp;
+      */
+      /*
+      console.log(group.key);
+      var res = findEntry(dict,group.key);
+      console.log(res);
+      */
+
+    }
+
+    function deleteDict(group, part) {
+
+    }
+
+/*
+    function test(e) {
+      console.log(e.subject.part);
+    }
+    */
+
+
+    function findObjectById(obj, k) {
+      for (var x in obj) {
+          if (obj[x].key == k) {
+            console.log(obj[x].key);
+            return obj[x].key;
+          }
+          else if (obj[x].children.length){
+            for (var x2 in obj[x].children){
+               result = findObjectById(obj[x].children,k);
+               if (result){
+                 return result;
+               }
+            }
+          }
+      }
+    }
 
     shiftNode = (function() {
+      console.log(dict);
+    });
+
+/*
+    shiftNode = (function() {
+      var dict = {};
+      var env = myDiagram.findNodeForKey("env");
+      dict[env.key] = null;
+      var subParts = env.findSubGraphParts()
+        for (var subPart = subParts.iterator; subPart.next() ;) {
+                  console.log(subPart);
+              }
+      //console.log(env.findSubGraphParts());
+
         myDiagram.nodes.each(function(n) {
         var node = n.part;
+        console.log(node.key," : ")
+        node.memberParts.each(function(p) {
+          if (p instanceof go.Node) {
+            console.log(p.key)}
+        });
+        */
+        /*
         if(node.containingGroup != null) {
           if (!node.containingGroup.key.includes("env")){
             console.log(node.nb.text," -> ",node.containingGroup.nb.text);
@@ -295,15 +372,14 @@ function init() {
           else {
             console.log(node.nb.text," -> ",node.containingGroup.key);
           }
-
-          /*
           node.findNodesConnected().each(function(n) {
             console.log(node.key, " connected to ",n.key);
           });
-          */
         }
+
       });
     });
+    */
 
     myDiagram.nodeTemplateMap.add("button",
     GO(go.Node, "Auto",
@@ -333,7 +409,7 @@ function init() {
             { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
             { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
-            //{ category: "button" }
+            { category: "button" }
           ])
         });
 
