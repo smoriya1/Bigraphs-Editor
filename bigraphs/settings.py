@@ -25,7 +25,7 @@ SECRET_KEY = 'tpl-rfq*y!3%%aoq8facx9s@ec^1e-h-baio9!4^28hnpg36t$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['smor.pythonanywhere.com']
 
 
 # Application definition
