@@ -344,15 +344,14 @@ function init() {
         }
       }
     }
-/*
+
     myDiagram.addDiagramListener("SelectionDeleted",
       function(e) {
-        e.subject.each(function§ { console.log(p.part.data); });
-        //deleteDuplicate(tree, e.subject.cf.key.nb.key);
-        //console.log(tree);
+        e.subject.each(function(node) {
+          deleteDuplicate(tree, node.nb.key);
+        });
+        console.log(tree);
       });
-      */
-
 
     function addEntryFromPalette(e) {
       if (!(e.subject.cf.key.part.containingGroup)){
