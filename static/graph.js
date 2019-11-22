@@ -54,7 +54,7 @@ function init() {
           mouseDrop: finishDrop,
           handlesDragDropForMembers: true,
           memberAdded: updateDict,
-          //memberRemoved: deleteDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
         },
@@ -73,7 +73,7 @@ function init() {
           resizeObjectName: "dRect",
           mouseDrop: finishDrop,
           memberAdded: updateDict,
-          //memberRemoved: deleteDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -128,7 +128,7 @@ function init() {
           resizeObjectName: "ov",
           mouseDrop: finishDrop,
           memberAdded: updateDict,
-          //memberRemoved: deleteDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -183,7 +183,7 @@ function init() {
           resizeObjectName: "hx",
           mouseDrop: finishDrop,
           memberAdded: updateDict,
-          //memberRemoved: deleteDict,
+          memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
           linkValidation: function(fromnode, fromport, tonode, toport) {
@@ -320,6 +320,10 @@ function init() {
       console.log(tree);
     }
 
+    function deleteDict(group, part){
+
+    }
+
     function findNode(){
       myDiagram.nodes.each(function(n) {
         console.log("nodes: ",n.data);
@@ -340,6 +344,15 @@ function init() {
         }
       }
     }
+/*
+    myDiagram.addDiagramListener("SelectionDeleted",
+      function(e) {
+        e.subject.each(function§ { console.log(p.part.data); });
+        //deleteDuplicate(tree, e.subject.cf.key.nb.key);
+        //console.log(tree);
+      });
+      */
+
 
     function addEntryFromPalette(e) {
       if (!(e.subject.cf.key.part.containingGroup)){
@@ -366,46 +379,6 @@ function init() {
           }
       }
     }
-
-    shiftNode = (function() {
-      console.log(dict);
-    });
-
-/*
-    shiftNode = (function() {
-      var dict = {};
-      var env = myDiagram.findNodeForKey("env");
-      dict[env.key] = null;
-      var subParts = env.findSubGraphParts()
-        for (var subPart = subParts.iterator; subPart.next() ;) {
-                  console.log(subPart);
-              }
-      //console.log(env.findSubGraphParts());
-
-        myDiagram.nodes.each(function(n) {
-        var node = n.part;
-        console.log(node.key," : ")
-        node.memberParts.each(function(p) {
-          if (p instanceof go.Node) {
-            console.log(p.key)}
-        });
-        */
-        /*
-        if(node.containingGroup != null) {
-          if (!node.containingGroup.key.includes("env")){
-            console.log(node.nb.text," -> ",node.containingGroup.nb.text);
-          }
-          else {
-            console.log(node.nb.text," -> ",node.containingGroup.key);
-          }
-          node.findNodesConnected().each(function(n) {
-            console.log(node.key, " connected to ",n.key);
-          });
-        }
-
-      });
-    });
-    */
 
     myPalette =
       GO(go.Palette, "myPaletteDiv",
