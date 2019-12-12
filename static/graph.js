@@ -305,6 +305,18 @@ function init() {
     var tree = [];
 
     function updateDict(group, part) {
+      envLst = [];
+      myDiagram.findTreeRoots().each(function(node){
+        envLst.push(node.key)
+      });
+      console.log(envLst)
+      for (var i = 0; i<envLst.length; i++){
+        var n = findObjectById(tree, envLst[i]);
+        if (n.parent != "root") {
+          deleteDuplicate(tree, envLst[i]);
+          tree.push(n);
+        }
+      }
       var cpy = findObjectById(tree, part.key);
       var temp = findObjectById(tree, group.key);
       if (cpy){
@@ -314,6 +326,7 @@ function init() {
       else{
         temp.children.push({
           key: part.key,
+          parent: group.key,
           children: []
         });
       }
@@ -353,10 +366,22 @@ function init() {
         console.log(tree);
       });
 
+/*
+function addEntryFromPalette(e) {
+            // e.subject is a go.Set of the dropped Parts
+            e.subject.each(function(p) {
+              if (p instanceof go.Node) console.log(p.key);
+            })
+
+        }
+*/
+
+
     function addEntryFromPalette(e) {
       if (!(e.subject.cf.key.part.containingGroup)){
         tree.push({
           key: e.subject.cf.key.nb.key,
+          parent: "root",
           children: []
         });
         console.log(tree);
