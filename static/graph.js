@@ -76,9 +76,7 @@ function init() {
           memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
-          linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-          }
+          linkValidation: validation
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
@@ -101,9 +99,7 @@ function init() {
         { resizable: true,
           resizeObjectName: "b",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-          linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-          }
+          linkValidation: validation
         },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
@@ -131,9 +127,7 @@ function init() {
           memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
-          linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-          }
+          linkValidation: validation
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
@@ -156,9 +150,7 @@ function init() {
       { resizable: true,
         resizeObjectName: "fOv",
         mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-        linkValidation: function(fromnode, fromport, tonode, toport) {
-          return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-        }
+        linkValidation: validation
       },
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
@@ -186,9 +178,7 @@ function init() {
           memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
           mouseDragLeave: function(e, grp, next) { highlightGroup(e, grp, false); },
-          linkValidation: function(fromnode, fromport, tonode, toport) {
-            return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-          }
+          linkValidation: validation
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
@@ -211,9 +201,7 @@ function init() {
       { resizable: true,
         resizeObjectName: "fHx",
         mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
-        linkValidation: function(fromnode, fromport, tonode, toport) {
-          return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
-        }
+        linkValidation: validation
       },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Hexagon",
@@ -271,6 +259,24 @@ function init() {
           ),
         ));
 
+    myDiagram.nodeTemplateMap.add("btn",
+      GO(go.Node, "Table", nodeStyle(),
+        GO(go.Panel, "Auto",
+          GO("Button",
+            { margin: 2,
+              click: test },
+            GO(go.TextBlock, "click"),
+        ))));
+
+    myDiagram.nodeTemplateMap.add("img",
+      GO(go.Node, "Table", nodeStyle(),
+        GO(go.Panel, "Auto",
+          GO("Button",
+            { margin: 2,
+              click: convertToImg },
+            GO(go.TextBlock, "Image"),
+        ))));
+
     myDiagram.linkTemplateMap.add("multiLinks",
       GO("Link",
         { relinkableFrom: true, relinkableTo: true },
@@ -303,6 +309,22 @@ function init() {
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
     var tree = [];
+
+    function convertToImg() {
+      var img = myDiagram.makeImageData({
+        type: "image/jpeg",
+        scale: 1,
+        document: w
+      });
+      var w = window.open();
+      w.document.open();
+      w.document.write(img);
+      w.document.close();
+    }
+
+    function validation (fromnode, fromport, tonode, toport) {
+      return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
+    }
 
     function updateDict(group, part) {
       envLst = [];
@@ -376,16 +398,17 @@ function addEntryFromPalette(e) {
         }
 */
 
-
     function addEntryFromPalette(e) {
-      if (!(e.subject.cf.key.part.containingGroup)){
-        tree.push({
-          key: e.subject.cf.key.nb.key,
-          parent: "root",
-          children: []
-        });
-        console.log(tree);
-      }
+      e.subject.each(function(p) {
+        if (!(p.containingGroup)){
+          tree.push({
+            key: p.key,
+            parent: "root",
+            children: []
+          });
+          console.log(tree);
+        }
+      })
     }
 
     function findObjectById(obj, k) {
@@ -403,6 +426,54 @@ function addEntryFromPalette(e) {
           }
       }
     }
+/*
+    function deleteDuplicate(obj, key){
+      for (var x in obj){
+        if (obj[x].key == key){
+          if (x > -1) {
+            obj.splice(x, 1);
+            return null;
+          }
+        }
+        if(obj[x].children){
+           for(var i=0;i<obj[x].children.length;i++)
+               deleteDuplicate(obj[x].children, key);
+        }
+      }
+    }
+    */
+
+    var resString = [];
+
+    function test() {
+      console.log(tree);
+      str(tree);
+      resString = resString.join("");
+      console.log(resString);
+      resString = [];
+    }
+
+    function str(obj) {
+      for (var x in obj) {
+        resString.push(obj[x].key+".");
+        if (obj[x].children.length == 0 && obj.length-1 != x) {
+          resString.push("1|");
+        }
+        else if (obj[x].children.length == 0 && obj.length-1 == x) {
+          resString.push("1");
+        }
+        else {
+          resString.push("(");
+          str(obj[x].children);
+          if (obj.length-1 != x) {
+            resString.push(")|");
+          }
+          else {
+            resString.push(")");
+          }
+        }
+      }
+    }
 
     myPalette =
       GO(go.Palette, "myPaletteDiv",
@@ -418,11 +489,26 @@ function addEntryFromPalette(e) {
             { key: "gBox", category: "box", text: "gBox", isGroup: true, maxLinks: Infinity },
             { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
-            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity }
+            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "btn", category: "btn" },
+            { key: "btn2", category: "img" }
           ])
         });
 
     $(function() {
+      /*
+        $('#draggableBtn').draggable({ handle: "#btnDraggable" });
+        var dgrm = new go.GraphLinksModel(
+        [
+          { key: "Alpha", loc: new go.Point(0, 0), color: "lightblue" },
+          { key: "Beta", loc: new go.Point(150, 0), color: "orange" },
+          { key: "Gamma", loc: new go.Point(0, 150), color: "lightgreen" },
+          { key: "Delta", loc: new go.Point(150, 150), color: "pink" }
+        ],
+        [
+          // No links to start
+        ]);
+        */
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
           {
