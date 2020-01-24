@@ -309,6 +309,7 @@ function init() {
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
     var tree = [];
+    var toDiagram = [];
 
     function convertToImg() {
       var img = myDiagram.makeImageData({
@@ -327,19 +328,25 @@ function init() {
     }
 
     function updateDict(group, part) {
-      envLst = [];
-      myDiagram.findTreeRoots().each(function(node){
-        envLst.push(node.key)
-      });
-      console.log(envLst)
-      for (var i = 0; i<envLst.length; i++){
-        var n = findObjectById(tree, envLst[i]);
-        if (n.parent != "root") {
-          deleteDuplicate(tree, envLst[i]);
-          tree.push(n);
+      //console.log(part.key);
+      //console.log(typeof part.key);
+      if (!part.key || typeof part.key == "number") {
+        //console.log("undefined: "+part.key);
+        return null;
+      }
+      var cpy;
+      var index = toDiagram.indexOf(part.key);
+      if (index >= 0) {
+        for (x in tree) {
+          if (tree[x].key == part.key) {
+            cpy = findObjectById(tree, part.key);
+            tree.splice(x, 1);
+            toDiagram.splice(index, 1);
+            break;
+          }
         }
       }
-      var cpy = findObjectById(tree, part.key);
+      //var cpy = findObjectById(tree, part.key);
       var temp = findObjectById(tree, group.key);
       if (cpy){
         deleteDuplicate(tree, part.key);
@@ -348,15 +355,20 @@ function init() {
       else{
         temp.children.push({
           key: part.key,
-          parent: group.key,
+          type: findType(part.key),
           children: []
         });
       }
+      //console.log(toDiagram);
       console.log(tree);
     }
 
-    function deleteDict(group, part){
-
+    function deleteDict(group, part) {
+      toDiagram.push(part.key);
+      var cpy = findObjectById(tree, part.key);
+      deleteDuplicate(tree, part.key);
+      tree.push(cpy);
+      console.log(toDiagram);
     }
 
     function findNode(){
@@ -382,30 +394,23 @@ function init() {
 
     myDiagram.addDiagramListener("SelectionDeleted",
       function(e) {
+        console.log("deleted")
         e.subject.each(function(node) {
           deleteDuplicate(tree, node.nb.key);
         });
         console.log(tree);
       });
 
-/*
-function addEntryFromPalette(e) {
-            // e.subject is a go.Set of the dropped Parts
-            e.subject.each(function(p) {
-              if (p instanceof go.Node) console.log(p.key);
-            })
-
-        }
-*/
-
     function addEntryFromPalette(e) {
       e.subject.each(function(p) {
         if (!(p.containingGroup)){
           tree.push({
             key: p.key,
-            parent: "root",
+            type: findType(p.key),
             children: []
           });
+          toDiagram.push(p.key);
+          //console.log(toDiagram);
           console.log(tree);
         }
       })
@@ -426,27 +431,32 @@ function addEntryFromPalette(e) {
           }
       }
     }
-/*
-    function deleteDuplicate(obj, key){
-      for (var x in obj){
-        if (obj[x].key == key){
-          if (x > -1) {
-            obj.splice(x, 1);
-            return null;
-          }
-        }
-        if(obj[x].children){
-           for(var i=0;i<obj[x].children.length;i++)
-               deleteDuplicate(obj[x].children, key);
-        }
+
+    function findType(key) {
+      if (~key.indexOf("env") != 0) {
+        return "env";
+      }
+      else if (~key.indexOf("ext") != 0) {
+        return "ext";
+      }
+      else if (~key.indexOf("id") != 0) {
+        return "id";
+      }
+      else {
+        return "node";
       }
     }
-    */
 
     var resString = [];
 
     function test() {
       console.log(tree);
+      for (var x in tree) {
+        if (tree[x].type != "env" && tree[x].type != "ext") {
+          console.log("Error, entities not included in env");
+          return null;
+        }
+      }
       str(tree);
       resString = resString.join("");
       console.log(resString);
@@ -455,12 +465,21 @@ function addEntryFromPalette(e) {
 
     function str(obj) {
       for (var x in obj) {
-        resString.push(obj[x].key+".");
+        if (obj[x].type != "env") {
+          resString.push(obj[x].key);
+        }
         if (obj[x].children.length == 0 && obj.length-1 != x) {
-          resString.push("1|");
+          if (obj[x].type == "id") {
+            resString.push("|");
+          }
+          else {
+            resString.push(".1|");
+          }
         }
         else if (obj[x].children.length == 0 && obj.length-1 == x) {
-          resString.push("1");
+          if (obj[x].type != "id") {
+            resString.push(".1");
+          }
         }
         else {
           resString.push("(");
