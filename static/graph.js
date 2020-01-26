@@ -319,6 +319,7 @@ function init() {
     var toDiagram = [];
     var externalNames = [];
 
+    //Experimental feature
     function convertToImg() {
       var img = myDiagram.makeImageData({
         type: "image/jpeg",
@@ -351,7 +352,6 @@ function init() {
           }
         }
       }
-      //var cpy = findObjectById(tree, part.key);
       var temp = findObjectById(tree, group.key);
       if (cpy){
         deleteDuplicate(tree, part.key);
@@ -364,7 +364,6 @@ function init() {
           children: []
         });
       }
-      //console.log(toDiagram);
       console.log(tree);
     }
 
@@ -477,7 +476,7 @@ function init() {
       str(tree);
       if (validLinks) {
         for (var i in externalNames) {
-          var index = linkNames.indexOf(externalNames[i]);
+          var index = linkNames.indexOf(myDiagram.findPartForKey(externalNames[i]).data.text);
           if (index != -1) {
             linkNames.splice(index,1);
           }
@@ -499,7 +498,12 @@ function init() {
     function str(obj) {
       for (var x in obj) {
         if (obj[x].type != "env") {
-          resString.push(obj[x].key);
+          if (obj[x].type == "id") {
+            resString.push(obj[x].type);
+          }
+          else {
+            resString.push(myDiagram.findPartForKey(obj[x].key).data.text);
+          }
           var links = myDiagram.findPartForKey(obj[x].key).findLinksConnected();
           if (links.count > 0) {
             var counter = 0;
