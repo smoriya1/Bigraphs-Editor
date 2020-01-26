@@ -264,7 +264,7 @@ function init() {
         GO(go.Panel, "Auto",
           GO("Button",
             { margin: 2,
-              click: test },
+              click: generate },
             GO(go.TextBlock, "click"),
         ))));
 
@@ -280,7 +280,7 @@ function init() {
     myDiagram.linkTemplateMap.add("multiLinks",
       GO("Link",
         { relinkableFrom: true, relinkableTo: true },
-        GO("Shape", { stroke: "#2D9945", strokeWidth: 2 })
+      GO("Shape", { stroke: "#2D9945", strokeWidth: 2 })
       ));
 
     myDiagram.model =
@@ -303,6 +303,13 @@ function init() {
         GO(go.Shape,
           { isPanelMain: true, stroke: "gray", strokeWidth: 2 },
           new go.Binding("stroke", "isSelected", function(sel) { return sel ? "dodgerblue" : "green"; }).ofObject()),
+        GO(go.TextBlock,
+          {
+            segmentOffset: new go.Point(0, -10),
+            segmentOrientation: go.Link.OrientUpright,
+            font: "Bold 10pt Sans-Serif"
+          },
+          new go.Binding("text","label").makeTwoWay())
       );
 
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
@@ -310,6 +317,7 @@ function init() {
 
     var tree = [];
     var toDiagram = [];
+    var externalNames = [];
 
     function convertToImg() {
       var img = myDiagram.makeImageData({
@@ -328,10 +336,7 @@ function init() {
     }
 
     function updateDict(group, part) {
-      //console.log(part.key);
-      //console.log(typeof part.key);
-      if (!part.key || typeof part.key == "number") {
-        //console.log("undefined: "+part.key);
+      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("ext") != 0) {
         return null;
       }
       var cpy;
@@ -364,6 +369,9 @@ function init() {
     }
 
     function deleteDict(group, part) {
+      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("ext") != 0) {
+        return null;
+      }
       toDiagram.push(part.key);
       var cpy = findObjectById(tree, part.key);
       deleteDuplicate(tree, part.key);
@@ -394,24 +402,34 @@ function init() {
 
     myDiagram.addDiagramListener("SelectionDeleted",
       function(e) {
-        console.log("deleted")
         e.subject.each(function(node) {
-          deleteDuplicate(tree, node.nb.key);
+          if (!node.data.key || typeof node.data.key  == "number") {
+            return null;
+          }
+          else if (~node.data.key.indexOf("ext") != 0) {
+            var index = externalNames.indexOf(node.data.key);
+            externalNames.splice(index, 1);
+          }
+          else {
+            deleteDuplicate(tree, node.data.key);
+          }
         });
         console.log(tree);
       });
 
     function addEntryFromPalette(e) {
       e.subject.each(function(p) {
-        if (!(p.containingGroup)){
+        if (!(p.containingGroup) && ~p.key.indexOf("ext") == 0){
           tree.push({
             key: p.key,
             type: findType(p.key),
             children: []
           });
           toDiagram.push(p.key);
-          //console.log(toDiagram);
           console.log(tree);
+        }
+        else if (~p.key.indexOf("ext") != 0) {
+          externalNames.push(p.key);
         }
       })
     }
@@ -436,9 +454,6 @@ function init() {
       if (~key.indexOf("env") != 0) {
         return "env";
       }
-      else if (~key.indexOf("ext") != 0) {
-        return "ext";
-      }
       else if (~key.indexOf("id") != 0) {
         return "id";
       }
@@ -448,8 +463,10 @@ function init() {
     }
 
     var resString = [];
+    var linkNames = [];
+    var validLinks = true;
 
-    function test() {
+    function generate() {
       console.log(tree);
       for (var x in tree) {
         if (tree[x].type != "env" && tree[x].type != "ext") {
@@ -458,15 +475,56 @@ function init() {
         }
       }
       str(tree);
-      resString = resString.join("");
-      console.log(resString);
+      if (validLinks) {
+        for (var i in externalNames) {
+          var index = linkNames.indexOf(externalNames[i]);
+          if (index != -1) {
+            linkNames.splice(index,1);
+          }
+        }
+        var temp = [];
+        for (var j = 0; j < linkNames.length; j++) {
+          temp.push("/"+linkNames[j]);
+        }
+        temp = temp.join("");
+        resString = resString.join("");
+        resString = temp.concat(resString);
+        console.log(resString);
+      }
       resString = [];
+      linkNames = [];
+      validLinks = true;
     }
 
     function str(obj) {
       for (var x in obj) {
         if (obj[x].type != "env") {
           resString.push(obj[x].key);
+          var links = myDiagram.findPartForKey(obj[x].key).findLinksConnected();
+          if (links.count > 0) {
+            var counter = 0;
+            resString.push("{");
+            links.each(function(n) {
+              if (n.data.label == undefined) {
+                console.log("Error, link label is missing");
+                validLinks = false;
+              }
+              else {
+                var index = ~linkNames.indexOf(n.data.label);
+                if (index == 0) {
+                  linkNames.push(n.data.label);
+                }
+                if (counter == links.count-1) {
+                  resString.push(n.data.label);
+                }
+                else {
+                  resString.push(n.data.label + ",");
+                }
+              }
+              counter++;
+            });
+            resString.push("}");
+          }
         }
         if (obj[x].children.length == 0 && obj.length-1 != x) {
           if (obj[x].type == "id") {
@@ -491,6 +549,9 @@ function init() {
             resString.push(")");
           }
         }
+        if (obj[x].type == "env" && obj.length-1 != x) {
+          resString.push("|");
+        }
       }
     }
 
@@ -502,7 +563,7 @@ function init() {
           model: new go.GraphLinksModel([
             { key: "env", category: "dashedBox", isGroup: true },
             { key: "id", category: "id" },
-            { key: "ext", category: "external" },
+            { key: "ext", category: "external", text: "ext" },
             { key: "gOval", category: "oval", text: "gOval", isGroup: true, maxLinks: Infinity },
             { key: "oval", category: "filledOval", text: "oval", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gBox", category: "box", text: "gBox", isGroup: true, maxLinks: Infinity },
@@ -515,19 +576,6 @@ function init() {
         });
 
     $(function() {
-      /*
-        $('#draggableBtn').draggable({ handle: "#btnDraggable" });
-        var dgrm = new go.GraphLinksModel(
-        [
-          { key: "Alpha", loc: new go.Point(0, 0), color: "lightblue" },
-          { key: "Beta", loc: new go.Point(150, 0), color: "orange" },
-          { key: "Gamma", loc: new go.Point(0, 150), color: "lightgreen" },
-          { key: "Delta", loc: new go.Point(150, 150), color: "pink" }
-        ],
-        [
-          // No links to start
-        ]);
-        */
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
           {
@@ -535,7 +583,12 @@ function init() {
               key: { readOnly: true, show: Inspector.showIfPresent },
               "category": { readOnly: true, show: Inspector.showIfPresent },
               "isGroup": { readOnly: true, show: Inspector.showIfPresent },
+              "text": { show: Inspector.showIfPresent },
+              "label": { show: Inspector.showIfLink },
               "fill": { show: Inspector.showIfPresent, type: 'color' },
+              "labelKeys": { readOnly: true, show: Inspector.showIfPresent },
+              "from": { readOnly: true, show: Inspector.showIfPresent },
+              "to": { readOnly: true, show: Inspector.showIfPresent },
               maxLinks: { type: "number", show: Inspector.showIfNode }
             }
           });
