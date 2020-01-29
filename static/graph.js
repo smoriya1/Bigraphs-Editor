@@ -503,31 +503,32 @@ function init() {
           }
           else {
             resString.push(myDiagram.findPartForKey(obj[x].key).data.text);
-          }
-          var links = myDiagram.findPartForKey(obj[x].key).findLinksConnected();
-          if (links.count > 0) {
-            var counter = 0;
-            resString.push("{");
-            links.each(function(n) {
-              if (n.data.label == undefined) {
-                console.log("Error, link label is missing");
-                validLinks = false;
-              }
-              else {
-                var index = ~linkNames.indexOf(n.data.label);
-                if (index == 0) {
-                  linkNames.push(n.data.label);
-                }
-                if (counter == links.count-1) {
-                  resString.push(n.data.label);
+            var links = myDiagram.findPartForKey(obj[x].key).findLinksConnected();
+            if (links.count > 0) {
+              var counter = 0;
+              resString.push("{");
+              links.each(function(n) {
+                if (n.data.label == undefined) {
+                  console.log("Error, link label is missing");
+                  validLinks = false;
                 }
                 else {
-                  resString.push(n.data.label + ",");
+                  var index = ~linkNames.indexOf(n.data.label);
+                  if (index == 0) {
+                    linkNames.push(n.data.label);
+                  }
+                  if (counter == links.count-1) {
+                    resString.push(n.data.label);
+                  }
+                  else {
+                    resString.push(n.data.label + ",");
+                  }
                 }
-              }
-              counter++;
-            });
-            resString.push("}");
+                counter++;
+              });
+              resString.push("}");
+            }
+            resString.push(".");
           }
         }
         if (obj[x].children.length == 0 && obj.length-1 != x) {
@@ -535,12 +536,12 @@ function init() {
             resString.push("|");
           }
           else {
-            resString.push(".1|");
+            resString.push("1|");
           }
         }
         else if (obj[x].children.length == 0 && obj.length-1 == x) {
           if (obj[x].type != "id") {
-            resString.push(".1");
+            resString.push("1");
           }
         }
         else {

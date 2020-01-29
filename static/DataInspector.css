@@ -19,7 +19,7 @@ see also: dataInspector.js, dataInspector.html
 
 .inspector {
   display: inline-block;
-  font: bold 14px helvetica, sans-serif;
+  font: 16px helvetica, sans-serif;
   background-color: #ffffff; /* Grey 900 */
   color: #F5F5F5; /* Grey 100 */
   cursor: default;
@@ -28,6 +28,7 @@ see also: dataInspector.js, dataInspector.html
 .inspector table {
   border-collapse: separate;
   border-spacing: 2px;
+  color: #000000;
 }
 
 .inspector td, th {
