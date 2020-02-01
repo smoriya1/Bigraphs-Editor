@@ -452,8 +452,8 @@ function init() {
       console.log(tree);
       for (var x in tree) {
         if (tree[x].type != "env" && tree[x].type != "ext") {
-          console.log("Error, entities not included in env");
-          return null;
+          //console.log("Error, entities not included in env");
+          return "Error, entities not included in env";
         }
       }
       str(tree);
@@ -471,12 +471,15 @@ function init() {
         temp = temp.join("");
         resString = resString.join("");
         res = temp.concat(resString);
-
-        //console.log(resString);
+      }
+      else {
+        resString = [];
+        linkNames = [];
+        validLinks = true;
+        return "Error, link label is missing";
       }
       resString = [];
       linkNames = [];
-      validLinks = true;
       return res;
     }
 
@@ -494,7 +497,7 @@ function init() {
               resString.push("{");
               links.each(function(n) {
                 if (n.data.label == undefined) {
-                  console.log("Error, link label is missing");
+                  //console.log("Error, link label is missing");
                   validLinks = false;
                 }
                 else {
@@ -590,8 +593,13 @@ function init() {
           $( "#btn1" ).click(function () {
             $("#result").html("");
             var res = generate();
+            if (~res.indexOf("Error") != 0) {
+              $( "#result" ).append('<span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>' + "<p>" + res + "</p>");
+            }
+            else {
+              $( "#result" ).append("<p>" + res + "</p>");
+            }
             $('#wrapper').dialog('open');
-            $( "#result" ).append("<p>" + res + "</p>");
             return false;
           });
       });
