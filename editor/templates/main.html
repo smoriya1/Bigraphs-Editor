@@ -16,13 +16,21 @@
 		<link rel='stylesheet' type="text/css" href='{% static "DataInspector.css" %}'>
 		<script src='{% static "DataInspector.js" %}'></script>
 		<script src='{% static "graph.js" %}'></script>
+		<title>Bigraphs Editor</title>
+		<h1 align="center">Bigraphs Editor</h1>
 	</head>
 	<body onload="init()">
-		<div id="taskBar"></div>
+		<hr>
+		<div id="taskBar">
+			<button id = "btn1">Convert to formula</button>
+			<button id = "btn2">Save as image</button>
+			<button id = "btn3">Add custom SVG</button>
+			<button id = "btn4">About</button>
+			<button id = "btn5">Help</button>
+		</div>
 		<div id="mainDiv">
 		    <div id="myPaletteDiv"></div>
 		    <div id="myDiagramDiv"></div>
-				<div id="myResult"></div>
 				<div id="draggablePanel" class="draggable">
 		      <div id="infoDraggable" class="handle">Info</div>
 		      	<div>
@@ -30,6 +38,9 @@
 		      	</div>
 		    </div>
 	  </div>
+		<div id="wrapper">
+			<div id="result"></div>
+		</div>
 	</body>
 </html>
 

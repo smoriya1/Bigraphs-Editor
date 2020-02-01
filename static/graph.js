@@ -466,6 +466,7 @@ function init() {
     var validLinks = true;
 
     function generate() {
+      var res;
       console.log(tree);
       for (var x in tree) {
         if (tree[x].type != "env" && tree[x].type != "ext") {
@@ -487,12 +488,14 @@ function init() {
         }
         temp = temp.join("");
         resString = resString.join("");
-        resString = temp.concat(resString);
-        console.log(resString);
+        res = temp.concat(resString);
+
+        //console.log(resString);
       }
       resString = [];
       linkNames = [];
       validLinks = true;
+      return res;
     }
 
     function str(obj) {
@@ -596,6 +599,20 @@ function init() {
               "to": { readOnly: true, show: Inspector.showIfPresent },
               maxLinks: { type: "number", show: Inspector.showIfNode }
             }
+          });
+
+          $('#wrapper').dialog({
+            autoOpen: false,
+            title: 'Generated Formula'
+          });
+
+          $( "#btn1, #btn2, #btn3, #btn4, #btn5" ).button();
+          $( "#btn1" ).click(function () {
+            $("#result").html("");
+            var res = generate();
+            $('#wrapper').dialog('open');
+            $( "#result" ).append("<p>" + res + "</p>");
+            return false;
           });
       });
   }
