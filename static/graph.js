@@ -259,24 +259,6 @@ function init() {
           ),
         ));
 
-    myDiagram.nodeTemplateMap.add("btn",
-      GO(go.Node, "Table", nodeStyle(),
-        GO(go.Panel, "Auto",
-          GO("Button",
-            { margin: 2,
-              click: generate },
-            GO(go.TextBlock, "click"),
-        ))));
-
-    myDiagram.nodeTemplateMap.add("img",
-      GO(go.Node, "Table", nodeStyle(),
-        GO(go.Panel, "Auto",
-          GO("Button",
-            { margin: 2,
-              click: convertToImg },
-            GO(go.TextBlock, "Image"),
-        ))));
-
     myDiagram.linkTemplateMap.add("multiLinks",
       GO("Link",
         { relinkableFrom: true, relinkableTo: true },
@@ -577,9 +559,7 @@ function init() {
             { key: "gBox", category: "box", text: "gBox", isGroup: true, maxLinks: Infinity },
             { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
-            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity },
-            { key: "btn", category: "btn" },
-            { key: "btn2", category: "img" }
+            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity }
           ])
         });
 
