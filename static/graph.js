@@ -438,37 +438,63 @@ function init() {
 
     function generate() {
       var res;
-      //console.log(tree);
+      var nullExt = [];
+
       for (var x in tree) {
         if (tree[x].type != "env" && tree[x].type != "ext") {
-          //console.log("Error, entities not included in env");
-          return "Error, entities not included in env";
+          resString = [];
+          linkNames = [];
+          return "Error, entities not included in environment node";
         }
       }
       str(tree);
       if (validLinks) {
         for (var i in externalNames) {
-          var index = linkNames.indexOf(myDiagram.findPartForKey(externalNames[i]).data.text);
+          var label = myDiagram.findPartForKey(externalNames[i]).data.text;
+          //console.log(externalNames[i]);
+          var links = myDiagram.findPartForKey(externalNames[i]).findLinksConnected();
+          if (links.count == 0) {
+            nullExt.push(label);
+          }
+          else {
+            error = false;
+            links.each(function(n) {
+              if (n.data.label !== label) {
+                error = true;
+                return null;
+              }
+            });
+            if (error) {
+              resString = [];
+              linkNames = [];
+              return "Error, external name and link name doesn't match";
+            }
+          }
+          var index = linkNames.indexOf(label);
           if (index != -1) {
             linkNames.splice(index,1);
           }
         }
         var temp = [];
+        var temp2 = [];
         for (var j = 0; j < linkNames.length; j++) {
           temp.push("/"+linkNames[j]);
         }
+        for (var k = 0; k < nullExt.length; k++) {
+          temp2.push("||{"+nullExt[k]+"}");
+        }
         temp = temp.join("");
         resString = resString.join("");
+        temp2 = temp2.join("");
         res = temp.concat(resString);
-      }
-      else {
-        resString = [];
-        linkNames = [];
-        validLinks = true;
-        return "Error, link label is missing";
+        res = res.concat(temp2);
       }
       resString = [];
       linkNames = [];
+      if (!validLinks) {
+        validLinks = true;
+        return "Error, link label is missing";
+      }
       return res;
     }
 
@@ -578,7 +604,7 @@ function init() {
             title: 'Generated Formula'
           });
 
-          $( "#btn1, #btn2, #btn3, #btn4, #btn5" ).button();
+          $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
           $( "#btn1" ).click(function () {
             $("#result").html("");
             var res = generate();
@@ -599,5 +625,25 @@ function init() {
             document.body.appendChild(link);
             link.click();
           });
+
+          $( "#btn3" ).click(function () {
+            var jsn = myDiagram.model.toJson();
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsn);
+            var downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "Result.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+          });
+
+          /*
+          $( "#btn4" ).click(function () {
+            myDiagram.model = go.Model.fromJson(loaded);
+          });
+          */
+
+          //myDiagram.model = go.Model.fromJson(loadedString);
+
       });
   }
