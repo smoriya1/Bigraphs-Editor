@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/smoriya1/Bigraphs-Editor/issues"
   },
-  "homepage": "https://github.com/smoriya1/Bigraphs-Editor#readme"
+  "homepage": "https://github.com/smoriya1/Bigraphs-Editor#readme",
+  "dependencies": {
+    "file-saver": "^2.0.2"
+  }
 }

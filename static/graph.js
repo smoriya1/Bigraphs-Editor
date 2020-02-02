@@ -301,17 +301,12 @@ function init() {
     var toDiagram = [];
     var externalNames = [];
 
-    //Experimental feature
     function convertToImg() {
-      var img = myDiagram.makeImageData({
-        type: "image/jpeg",
+      var res = myDiagram.makeImageData({
         scale: 1,
-        document: w
+        background: "white"
       });
-      var w = window.open();
-      w.document.open();
-      w.document.write(img);
-      w.document.close();
+      return res;
     }
 
     function validation (fromnode, fromport, tonode, toport) {
@@ -346,7 +341,7 @@ function init() {
           children: []
         });
       }
-      console.log(tree);
+      //console.log(tree);
     }
 
     function deleteDict(group, part) {
@@ -357,13 +352,7 @@ function init() {
       var cpy = findObjectById(tree, part.key);
       deleteDuplicate(tree, part.key);
       tree.push(cpy);
-      console.log(toDiagram);
-    }
-
-    function findNode(){
-      myDiagram.nodes.each(function(n) {
-        console.log("nodes: ",n.data);
-      });
+      //console.log(toDiagram);
     }
 
     function deleteDuplicate(obj, key){
@@ -395,7 +384,7 @@ function init() {
             deleteDuplicate(tree, node.data.key);
           }
         });
-        console.log(tree);
+        //console.log(tree);
       });
 
     function addEntryFromPalette(e) {
@@ -407,7 +396,7 @@ function init() {
             children: []
           });
           toDiagram.push(p.key);
-          console.log(tree);
+          //console.log(tree);
         }
         else if (~p.key.indexOf("ext") != 0) {
           externalNames.push(p.key);
@@ -449,7 +438,7 @@ function init() {
 
     function generate() {
       var res;
-      console.log(tree);
+      //console.log(tree);
       for (var x in tree) {
         if (tree[x].type != "env" && tree[x].type != "ext") {
           //console.log("Error, entities not included in env");
@@ -601,6 +590,14 @@ function init() {
             }
             $('#wrapper').dialog('open');
             return false;
+          });
+
+          $( "#btn2" ).click(function () {
+            var link = document.createElement('a');
+            link.href = convertToImg();
+            link.download = 'Result.png';
+            document.body.appendChild(link);
+            link.click();
           });
       });
   }
