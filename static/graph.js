@@ -606,32 +606,35 @@ function init() {
 
           $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
           $( "#btn1" ).click(function () {
+            var text = $("#txtbox").val();
             $("#result").html("");
             var res = generate();
             if (~res.indexOf("Error") != 0) {
               $( "#result" ).append('<span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>' + "<p>" + res + "</p>");
             }
             else {
-              $( "#result" ).append("<p>" + res + "</p>");
+              $( "#result" ).append("<p>" + text + " = " + res + "</p>");
             }
             $('#wrapper').dialog('open');
             return false;
           });
 
           $( "#btn2" ).click(function () {
+            var text = $("#txtbox").val();
             var link = document.createElement('a');
             link.href = convertToImg();
-            link.download = 'Result.png';
+            link.download = text + '.png';
             document.body.appendChild(link);
             link.click();
           });
 
           $( "#btn3" ).click(function () {
+            var text = $("#txtbox").val();
             var jsn = myDiagram.model.toJson();
             var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsn);
             var downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "Result.json");
+            downloadAnchorNode.setAttribute("download", text+".json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();

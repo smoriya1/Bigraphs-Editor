@@ -7,6 +7,10 @@ h1 {
   height: 30px;
 }
 
+#txtbox {
+	margin-left: 5px;
+}
+
 hr {
 	display: block;
   margin-top: 0.5em;
