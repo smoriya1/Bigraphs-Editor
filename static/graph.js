@@ -716,6 +716,7 @@ function init() {
                 } else {
                     alert("Please upload a valid SVG file.");
                 }
+                document.getElementById("#myFile").value = "";
           });
         });
 
