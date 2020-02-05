@@ -567,6 +567,7 @@ function init() {
     myPalette =
       GO(go.Palette, "myPaletteDiv",
         {
+          layout: GO(go.GridLayout, { alignment: go.GridLayout.Location }),
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           groupTemplateMap: myDiagram.groupTemplateMap,
           model: new go.GraphLinksModel([
@@ -692,6 +693,7 @@ function init() {
                             }
 
                             var customNode = new go.Node(go.Panel.Viewbox);
+                            customNode.locationSpot = go.Spot.Center;
                             customNode.resizable = true;
                             customNode.resizeObjectName = "custom";
                             customNode.mouseDrop = function(e, nod) { finishDrop(e, nod.containingGroup); };
