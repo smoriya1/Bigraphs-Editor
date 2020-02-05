@@ -196,6 +196,7 @@ function init() {
         ),
       ));
 
+
     myDiagram.nodeTemplateMap.add("filledHex",
       GO(go.Node, "Table", nodeStyle(),
       { resizable: true,
@@ -581,6 +582,8 @@ function init() {
           ])
         });
 
+    //myPalette.model.addNodeData({ key: "zzz", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity });
+
     $(function() {
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
@@ -600,8 +603,15 @@ function init() {
           });
 
           $('#wrapper').dialog({
+            modal: true,
             autoOpen: false,
             title: 'Generated Formula'
+          });
+
+          $('#svgWrapper').dialog({
+            modal: true,
+            autoOpen: false,
+            title: 'Add custom SVG'
           });
 
           $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
@@ -640,13 +650,75 @@ function init() {
             downloadAnchorNode.remove();
           });
 
-          /*
-          $( "#btn4" ).click(function () {
-            myDiagram.model = go.Model.fromJson(loaded);
-          });
-          */
+          $( "#btn5" ).click(function () {
+            $('#svgWrapper').dialog('open');
+              $( "#btnGen" ).click(function () {
+                var svgElem = $('#myFile').prop('files');
+                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.svg)$/;
+                if (regex.test($("#myFile").val().toLowerCase())) {
+                    if (typeof (FileReader) != "undefined") {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var xmlDoc = $.parseXML(e.target.result);
+                            console.log(xmlDoc.getElementsByTagName("path"));
 
-          //myDiagram.model = go.Model.fromJson(loadedString);
+                            var customPanel = new go.Panel();
+
+                            var paths = xmlDoc.getElementsByTagName("path");
+                            for (var i = 0; i < paths.length; i++) {
+
+                              var path = paths[i];
+                              var shape = new go.Shape();
+
+                              var stroke = path.getAttribute("stroke");
+                              if (typeof stroke === "string" && stroke !== "none") {
+                                shape.stroke = stroke;
+                              } else {
+                                shape.stroke = null;
+                              }
+
+                              var strokewidth = parseFloat(path.getAttribute("stroke-width"));
+                              if (!isNaN(strokewidth)) shape.strokeWidth = strokewidth;
+
+                              var fill = path.getAttribute("fill");
+                              if (typeof fill === "string") {
+                                shape.fill = (fill === "none") ? null : fill;
+                              }
+
+                              var data = path.getAttribute("d");
+                              if (typeof data === "string") shape.geometry = go.Geometry.parse(data, true);
+
+                              customPanel.add(shape);
+                            }
+
+                            var customNode = new go.Node(go.Panel.Viewbox);
+                            customNode.resizable = true;
+                            customNode.resizeObjectName = "custom";
+                            customNode.mouseDrop = function(e, nod) { finishDrop(e, nod.containingGroup); };
+                            customNode.portId = "";
+                            customNode.fromLinkable = true;
+                            customNode.toLinkable = true;
+                            customNode.linkValidation = validation;
+                            customNode.height = 80;
+                            customNode.width = 80;
+                            customNode.cursor = "pointer";
+
+                            customNode.add(customPanel);
+                            myDiagram.nodeTemplateMap.add("custom", customNode);
+                            myPalette.model.addNodeData({ key: "cus", category: "custom", text: "custom", maxLinks: Infinity });
+                        }
+                        reader.readAsText($("#myFile")[0].files[0]);
+                    } else {
+                        alert("This browser does not support HTML5.");
+                    }
+                } else {
+                    alert("Please upload a valid SVG file.");
+                }
+          });
+        });
+
+        $( "#btn6" ).click(function () {
+        });
 
       });
   }
