@@ -61,7 +61,9 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            { name:"dBox", width: 80, height: 80, fill: null, strokeDashArray: [5,3]}
+            { name:"dBox", fill: null, strokeDashArray: [5,3]},
+            new go.Binding("width").makeTwoWay(),
+            new go.Binding("height").makeTwoWay()
           ),
         ),
       ));
@@ -81,7 +83,9 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            {name:"dRect", width: 80, height: 80, fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}
+            {name:"dRect", fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("width").makeTwoWay(),
+            new go.Binding("height").makeTwoWay()
             ),
             GO(go.TextBlock,
             {
@@ -103,8 +107,10 @@ function init() {
         },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            { name:"b", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" },
-            new go.Binding("fill", "fill")
+            { name:"b", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" },
+            new go.Binding("fill", "fill"),
+            new go.Binding("width").makeTwoWay(),
+            new go.Binding("height").makeTwoWay()
             ),
             GO(go.TextBlock,
             {
@@ -132,7 +138,9 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
-            {name: "ov", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            {name: "ov", fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("width").makeTwoWay(),
+            new go.Binding("height").makeTwoWay()
             ),
           GO(go.TextBlock,
           {
@@ -154,8 +162,10 @@ function init() {
       },
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
-            {name: "fOv", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-          new go.Binding("fill", "fill")
+            {name: "fOv", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+          new go.Binding("fill", "fill"),
+          new go.Binding("width").makeTwoWay(),
+          new go.Binding("height").makeTwoWay()
           ),
           GO(go.TextBlock,
           {
@@ -183,7 +193,9 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Hexagon",
-            {name: "hx", width: 80, height: 80, fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}
+            {name: "hx", fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            new go.Binding("width").makeTwoWay(),
+            new go.Binding("height").makeTwoWay()
             ),
           GO(go.TextBlock,
           {
@@ -206,8 +218,10 @@ function init() {
       },
         GO(go.Panel, "Auto",
           GO(go.Shape, "Hexagon",
-            {name: "fHx", width: 80, height: 80, fill: "#d3d3d3", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
-          new go.Binding("fill", "fill")
+            {name: "fHx", strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+          new go.Binding("fill", "fill"),
+          new go.Binding("width").makeTwoWay(),
+          new go.Binding("height").makeTwoWay()
           ),
           GO(go.TextBlock,
           {
@@ -256,7 +270,10 @@ function init() {
         },
         GO(go.Panel, "Auto",
           GO(go.Shape, "roundedRectangle",
-            { name: "id", fill: "#A9A9A9", width: 80, height: 80, strokeDashArray: [5,3]})
+            { name: "id", fill: "#A9A9A9", strokeDashArray: [5,3]},
+            new go.Binding("width").makeTwoWay(),
+            new go.Binding("height").makeTwoWay()
+          )
           ),
         ));
 
@@ -571,15 +588,15 @@ function init() {
           nodeTemplateMap: myDiagram.nodeTemplateMap,
           groupTemplateMap: myDiagram.groupTemplateMap,
           model: new go.GraphLinksModel([
-            { key: "env", category: "dashedBox", isGroup: true },
-            { key: "id", category: "id" },
+            { key: "env", category: "dashedBox", width: 80, height: 80, isGroup: true },
+            { key: "id", category: "id", width: 80, height: 80 },
             { key: "ext", category: "external", text: "ext" },
-            { key: "gOval", category: "oval", text: "gOval", isGroup: true, maxLinks: Infinity },
-            { key: "oval", category: "filledOval", text: "oval", fill: "#d3d3d3", maxLinks: Infinity },
-            { key: "gBox", category: "box", text: "gBox", isGroup: true, maxLinks: Infinity },
-            { key: "box", category: "filledBox" , text: "box", fill: "#d3d3d3", maxLinks: Infinity },
-            { key: "gHex", category: "hex", text: "gHex", isGroup: true, maxLinks: Infinity },
-            { key: "hex", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity }
+            { key: "gOval", category: "oval", text: "gOval", width: 80, height: 80, isGroup: true, maxLinks: Infinity },
+            { key: "oval", category: "filledOval", text: "oval", width: 80, height: 80, fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "gBox", category: "box", text: "gBox", width: 80, height: 80, isGroup: true, maxLinks: Infinity },
+            { key: "box", category: "filledBox" , text: "box", width: 80, height: 80, fill: "#d3d3d3", maxLinks: Infinity },
+            { key: "gHex", category: "hex", text: "gHex", width: 80, height: 80, isGroup: true, maxLinks: Infinity },
+            { key: "hex", category: "filledHex", text: "hex", width: 80, height: 80, fill: "#d3d3d3", maxLinks: Infinity }
           ])
         });
 
@@ -599,7 +616,9 @@ function init() {
               "labelKeys": { readOnly: true, show: Inspector.showIfPresent },
               "from": { readOnly: true, show: Inspector.showIfPresent },
               "to": { readOnly: true, show: Inspector.showIfPresent },
-              maxLinks: { type: "number", show: Inspector.showIfNode },
+              width: { type: "number", show: Inspector.showIfPresent },
+              height: { type: "number", show: Inspector.showIfPresent },
+              maxLinks: { type: "number", show: Inspector.showIfPresent },
               loc: { readOnly: true, show: Inspector.showIfPresent },
               group: { readOnly: true, show: Inspector.showIfPresent }
             }
@@ -729,8 +748,8 @@ function init() {
             $('#svgWrapper').dialog('open');
           });
 
-        $( "#btn6" ).click(function () {
-        });
+          $( "#btn6" ).click(function () {
+          });
 
       });
   }
