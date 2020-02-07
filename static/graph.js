@@ -371,6 +371,7 @@ function init() {
     function updateDict(group, part) {
       //console.log("updated: "+loadedJson + " : "+ part.key);
       if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 || ~part.key.indexOf("ext") != 0) {
+        //console.log(tree);
         return null;
       }
       if (loadedJson) {
@@ -404,7 +405,8 @@ function init() {
     }
 
     function deleteDict(group, part) {
-      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 && ~part.key.indexOf("ext") != 0) {
+      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 || ~part.key.indexOf("ext") != 0) {
+        //console.log("null");
         return null;
       }
       toDiagram.push(part.key);
@@ -412,6 +414,7 @@ function init() {
       deleteDuplicate(tree, part.key);
       tree.push(cpy);
       //console.log(toDiagram);
+      //console.log(tree);
     }
 
     function deleteDuplicate(obj, key){
@@ -931,8 +934,8 @@ function init() {
           });
 
           $( "#btn6" ).click(function () {
-            console.log(tree);
-            console.log(toDiagram);
+            //console.log(tree);
+            //console.log(toDiagram);
           });
 
           $( "#btn7" ).click(function () {
