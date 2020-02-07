@@ -99,7 +99,7 @@ function init() {
       ));
 
     myDiagram.nodeTemplateMap.add("filledBox",
-      GO(go.Node, "Table", nodeStyle(),
+      GO(go.Node, nodeStyle(), "Viewbox",
         { resizable: true,
           resizeObjectName: "b",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
@@ -112,14 +112,29 @@ function init() {
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
+            /*
+            GO(go.Shape, "Rectangle",
+              { width: 50, height: 50, strokeWidth: 1, fill: "transparent", fromLinkable: false, toLinkable: false}),
+              */
+
             GO(go.TextBlock,
-            {
-              alignment: go.Spot.TopLeft,
-              alignmentFocus: new go.Spot(0, 0, -4, -4),
-              font: "Bold 10pt Sans-Serif",
-              editable: true
-            },
-          new go.Binding("text").makeTwoWay()),
+              {
+                alignment: go.Spot.Center,
+                margin: 20,
+                fromLinkable: false,
+                toLinkable: false,
+                editable: false
+              }
+            ),
+            
+            GO(go.TextBlock,
+              {
+                alignment: go.Spot.TopLeft,
+                alignmentFocus: new go.Spot(0, 0, -4, -4),
+                font: "Bold 10pt Sans-Serif",
+                editable: true
+              },
+              new go.Binding("text").makeTwoWay()),
         ),
       ));
 
@@ -168,12 +183,21 @@ function init() {
           new go.Binding("height").makeTwoWay()
           ),
           GO(go.TextBlock,
-          {
-            alignment: go.Spot.TopLeft,
-            alignmentFocus: new go.Spot(0, 0, -4, -4),
-            font: "Bold 10pt Sans-Serif",
-            editable: true
-          },
+            {
+              alignment: go.Spot.Center,
+              margin: 20,
+              fromLinkable: false,
+              toLinkable: false,
+              editable: false
+            }
+          ),
+          GO(go.TextBlock,
+            {
+              alignment: go.Spot.TopLeft,
+              alignmentFocus: new go.Spot(0, 0, -4, -4),
+              font: "Bold 10pt Sans-Serif",
+              editable: true
+            },
           new go.Binding("text").makeTwoWay())
         ),
       ));
@@ -224,13 +248,22 @@ function init() {
           new go.Binding("height").makeTwoWay()
           ),
           GO(go.TextBlock,
-          {
-            alignment: go.Spot.TopLeft,
-            alignmentFocus: new go.Spot(0, 0, -4, -4),
-            font: "Bold 10pt Sans-Serif",
-            editable: true
-          },
-          new go.Binding("text").makeTwoWay())
+            {
+              alignment: go.Spot.Center,
+              margin: 20,
+              fromLinkable: false,
+              toLinkable: false,
+              editable: false
+            }
+          ),
+          GO(go.TextBlock,
+            {
+              alignment: go.Spot.TopLeft,
+              alignmentFocus: new go.Spot(0, 0, -4, -4),
+              font: "Bold 10pt Sans-Serif",
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
         ),
       ));
 
@@ -601,7 +634,7 @@ function init() {
           model: new go.GraphLinksModel([
             { key: "env", category: "dashedBox", width: 80, height: 80, isGroup: true },
             { key: "id", category: "id", width: 80, height: 80 },
-            { key: "ext", category: "external", text: "ext" },
+            { key: "ext", category: "external", text: "name" },
             { key: "gOval", category: "oval", text: "gOval", width: 80, height: 80, isGroup: true, maxLinks: Infinity },
             { key: "oval", category: "filledOval", text: "oval", width: 80, height: 80, fill: "#d3d3d3", maxLinks: Infinity },
             { key: "gBox", category: "box", text: "gBox", width: 80, height: 80, isGroup: true, maxLinks: Infinity },
@@ -718,6 +751,23 @@ function init() {
                             customPanel.add(shape);
                           }
 
+                          var txt = new go.TextBlock();
+                          txt.alignment = go.Spot.Center;
+                          txt.margin = 20;
+                          txt.fromLinkable = false;
+                          txt.toLinkable = false;
+                          txt.editable = false;
+                          //customPanel.add(txt);
+
+                          var box =  new go.Shape();
+                          box.width = 50;
+                          box.height = 50;
+                          box.strokeWidth = 1;
+                          box.fill = "transparent";
+                          box.fromLinkable = false;
+                          box.toLinkable = false;
+                          customPanel.add(box);
+
                           var customNode = new go.Node(go.Panel.Viewbox);
                           customNode.locationSpot = go.Spot.Center;
                           customNode.resizable = true;
@@ -732,6 +782,7 @@ function init() {
                           customNode.cursor = "pointer";
 
                           customNode.add(customPanel);
+
                           myDiagram.nodeTemplateMap.add("custom", customNode);
                           myPalette.model.addNodeData({ key: "cus", category: "custom", text: "custom", maxLinks: Infinity });
                         }
@@ -872,9 +923,4 @@ function init() {
           });
 
       });
-
-      function isObject(obj)
-        {
-            return obj !== undefined && obj !== null && obj.constructor == Object;
-        }
   }
