@@ -25,6 +25,19 @@ function init() {
       };
     }
 
+    function enter(e, obj) {
+      var shape = obj.findObject("drag");
+      shape.fill = "#6DAB80";
+      shape.strokeWidth = 1;
+      shape.stroke = "#A6E6A1";
+    };
+
+    function leave(e, obj) {
+        var shape = obj.findObject("drag");
+        shape.fill = "transparent";
+        shape.strokeWidth = 0;
+    };
+
     function finishDrop(e, grp) {
         var ok = (grp !== null ? grp.addMembers(grp.diagram.selection, true)
           : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
@@ -103,6 +116,8 @@ function init() {
         { resizable: true,
           resizeObjectName: "b",
           mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
+          mouseEnter: enter,
+          mouseLeave: leave,
           linkValidation: validation
         },
         GO(go.Panel, "Auto",
@@ -112,11 +127,9 @@ function init() {
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
-            /*
-            GO(go.Shape, "Rectangle",
-              { width: 50, height: 50, strokeWidth: 1, fill: "transparent", fromLinkable: false, toLinkable: false}),
-              */
-
+          GO(go.Shape, "Rectangle",
+            { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
+              /*
             GO(go.TextBlock,
               {
                 alignment: go.Spot.Center,
@@ -126,7 +139,7 @@ function init() {
                 editable: false
               }
             ),
-            
+            */
             GO(go.TextBlock,
               {
                 alignment: go.Spot.TopLeft,
@@ -172,6 +185,8 @@ function init() {
       GO(go.Node, "Table", nodeStyle(),
       { resizable: true,
         resizeObjectName: "fOv",
+        mouseEnter: enter,
+        mouseLeave: leave,
         mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
         linkValidation: validation
       },
@@ -182,15 +197,8 @@ function init() {
           new go.Binding("width").makeTwoWay(),
           new go.Binding("height").makeTwoWay()
           ),
-          GO(go.TextBlock,
-            {
-              alignment: go.Spot.Center,
-              margin: 20,
-              fromLinkable: false,
-              toLinkable: false,
-              editable: false
-            }
-          ),
+          GO(go.Shape, "Rectangle",
+            { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
           GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -236,6 +244,8 @@ function init() {
     myDiagram.nodeTemplateMap.add("filledHex",
       GO(go.Node, "Table", nodeStyle(),
       { resizable: true,
+        mouseEnter: enter,
+        mouseLeave: leave,
         resizeObjectName: "fHx",
         mouseDrop: function(e, nod) { finishDrop(e, nod.containingGroup); },
         linkValidation: validation
@@ -247,15 +257,8 @@ function init() {
           new go.Binding("width").makeTwoWay(),
           new go.Binding("height").makeTwoWay()
           ),
-          GO(go.TextBlock,
-            {
-              alignment: go.Spot.Center,
-              margin: 20,
-              fromLinkable: false,
-              toLinkable: false,
-              editable: false
-            }
-          ),
+          GO(go.Shape, "Rectangle",
+            { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
           GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
@@ -762,10 +765,11 @@ function init() {
                           var box =  new go.Shape();
                           box.width = 50;
                           box.height = 50;
-                          box.strokeWidth = 1;
+                          box.strokeWidth = 0;
                           box.fill = "transparent";
                           box.fromLinkable = false;
                           box.toLinkable = false;
+                          box.name = "drag";
                           customPanel.add(box);
 
                           var customNode = new go.Node(go.Panel.Viewbox);
@@ -780,7 +784,8 @@ function init() {
                           customNode.height = 80;
                           customNode.width = 80;
                           customNode.cursor = "pointer";
-
+                          customNode.mouseEnter = enter;
+                          customNode.mouseLeave = leave;
                           customNode.add(customPanel);
 
                           myDiagram.nodeTemplateMap.add("custom", customNode);
