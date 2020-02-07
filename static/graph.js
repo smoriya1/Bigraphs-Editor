@@ -518,7 +518,6 @@ function init() {
         res = temp.concat(resString);
         res = res.concat(temp2);
       }
-      console.log(linkNames);
       resString = [];
       linkNames = [];
       if (!validLinks) {
@@ -734,15 +733,25 @@ function init() {
                           var reader = new FileReader();
                           reader.onload = function (e) {
                             var rawDoc = e.target.result;
-                            var res = JSON.parse(rawDoc);
                             loadedJson = true;
-                            myDiagram.model = go.Model.fromJson(res[0]);
+                            try {
+                              var res = JSON.parse(rawDoc);
+                              myDiagram.model = go.Model.fromJson(res[0]);
+                            }
+                            catch (err) {
+                              alert("Error, invalid JSON file");
+                              loadedJson = false;
+                              return null;
+                            }
                             loadedJson = false;
                             tree = [];
                             externalNames = [];
                             toDiagram = [];
                             tree = res[1];
                             externalNames = res[2];
+                            for (var x in tree) {
+                              toDiagram.push(tree[x].key);
+                            }
                           }
                           reader.readAsText($("#myJSON")[0].files[0]);
                         } else {
@@ -812,7 +821,8 @@ function init() {
           });
 
           $( "#btn6" ).click(function () {
-
+            console.log(tree);
+            console.log(toDiagram);
           });
 
       });
