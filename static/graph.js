@@ -868,6 +868,14 @@ function init() {
               $('#myJSON').val("");
           });
 
+          $('#helpWrapper').dialog({
+            'height': "auto",
+            'width' : "800px",
+            modal: true,
+            autoOpen: false,
+            title: 'Help'
+          });
+
           $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
           $( "#btn1" ).click(function () {
             var text = $("#txtbox").val();
@@ -925,6 +933,10 @@ function init() {
           $( "#btn6" ).click(function () {
             console.log(tree);
             console.log(toDiagram);
+          });
+
+          $( "#btn7" ).click(function () {
+            $('#helpWrapper').dialog('open');
           });
 
       });

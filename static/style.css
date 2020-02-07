@@ -72,3 +72,8 @@ hr {
   width: 100%;
   overflow: hidden;
 }
+
+#helpWrapper {
+	width: 400px;
+	height: 200px;
+}

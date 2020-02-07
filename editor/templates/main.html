@@ -50,6 +50,21 @@
 		<div id="svgWrapper">
 			Select an SVG file: <input type="file" id="myFile" accept="image/svg+xml">
 		</div>
+		<div id="helpWrapper">
+			<ul>
+				<li>Entity Nodes: Comes in various shapes and types. Use the info panel to perform operations, such as changing the colour, setting the max links, renaming, etc.</li>
+					<ul>
+					  <li>Environment Entity Node: The dashed environment entity denotes the region of adjacent parts of the system. Acts as the root in the editor and every entity must be placed inside the node. Unlinkable with other entities.</li>
+					  <li>Default Entity Node: The standard entity type which comes in three different shapes by default.</li>
+					  <li>Group Entity Node: The group node allows entities to be nested for a hierarchial representation of bigraphs.</li>
+						<li>Id Entity Node: The identity node. Unlinkable with other entities.</li>
+						<li>Name: Represents the links to other bigraphs. To use it, place the name node outside the environment node and create a connection with an entity node. The name must match the link name.</li>
+						<li>Custom Entity Nodes: Custom nodes could be used by importing an SVG file. Imported nodes cannot be used as group entities.</li>
+					</ul>
+				<li>Links: Form a link between other entities by clicking and dragging the arrow to another entity. Link names could be configured inside the info panel.</li>
+				<li>Dragging: To drag default and custom nodes, click and drag the highlighted box on the top left corner.</li>
+			</ul>
+		</div>
 	</body>
 </html>
 
