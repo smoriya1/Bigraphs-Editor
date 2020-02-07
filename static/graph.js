@@ -613,13 +613,14 @@ function init() {
 
     function checkValidKeyNames(diagram,tree,ext) {
       var bool = false;
-      console.log(diagram.nodeDataArray);
+      //console.log(diagram.nodeDataArray);
       for (var x in diagram.nodeDataArray) {
+        //console.log(diagram.nodeDataArray[x].key);
         if (diagram.nodeDataArray[x].category == "LinkLabel") {
           continue;
         }
         if (diagram.nodeDataArray[x].category == "external") {
-          if (external.includes(diagram.nodeDataArray[x].key)) {
+          if (ext.includes(diagram.nodeDataArray[x].key)) {
             continue;
           }
           else {
@@ -630,6 +631,7 @@ function init() {
         var result = findObjectById(tree,diagram.nodeDataArray[x].key);
         if (!result) {
           bool = true;
+          break;
         }
       }
 
@@ -804,6 +806,10 @@ function init() {
                 }
               }
             ]
+          });
+
+          $('div#jsonWrapper').on('dialogclose', function(event) {
+              $('#myJSON').val("");
           });
 
           $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
