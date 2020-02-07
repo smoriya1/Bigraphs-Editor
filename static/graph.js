@@ -11,7 +11,7 @@ function init() {
 
     function nodeStyle() {
       return [
-        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify),
         {
           locationSpot: go.Spot.Center,
         }
@@ -318,6 +318,7 @@ function init() {
     var tree = [];
     var toDiagram = [];
     var externalNames = [];
+    loadedJson = false;
 
     function convertToImg() {
       var res = myDiagram.makeImageData({
@@ -332,7 +333,11 @@ function init() {
     }
 
     function updateDict(group, part) {
-      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("ext") != 0) {
+      //console.log("updated: "+loadedJson + " : "+ part.key);
+      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 || ~part.key.indexOf("ext") != 0) {
+        return null;
+      }
+      if (loadedJson) {
         return null;
       }
       var cpy;
@@ -363,7 +368,7 @@ function init() {
     }
 
     function deleteDict(group, part) {
-      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("ext") != 0) {
+      if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 && ~part.key.indexOf("ext") != 0) {
         return null;
       }
       toDiagram.push(part.key);
@@ -401,20 +406,26 @@ function init() {
           else {
             deleteDuplicate(tree, node.data.key);
           }
+          if (!node.data.key.containingGroup) {
+            toDiagram.splice(toDiagram.indexOf(node.data.key), 1);
+          }
         });
-        //console.log(tree);
       });
 
     function addEntryFromPalette(e) {
+      if (loadedJson) {
+        //loadedJson = false;
+        return null;
+      }
       e.subject.each(function(p) {
-        if (!(p.containingGroup) && ~p.key.indexOf("ext") == 0){
+        //console.log(p.containingGroup);
+        if (!(p.containingGroup) && ~p.key.indexOf("ext") == 0) {
           tree.push({
             key: p.key,
             type: findType(p.key),
             children: []
           });
           toDiagram.push(p.key);
-          //console.log(tree);
         }
         else if (~p.key.indexOf("ext") != 0) {
           externalNames.push(p.key);
@@ -507,6 +518,7 @@ function init() {
         res = temp.concat(resString);
         res = res.concat(temp2);
       }
+      console.log(linkNames);
       resString = [];
       linkNames = [];
       if (!validLinks) {
@@ -600,8 +612,6 @@ function init() {
           ])
         });
 
-    //myPalette.model.addNodeData({ key: "zzz", category: "filledHex", text: "hex", fill: "#d3d3d3", maxLinks: Infinity });
-
     $(function() {
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
@@ -619,7 +629,7 @@ function init() {
               width: { type: "number", show: Inspector.showIfPresent },
               height: { type: "number", show: Inspector.showIfPresent },
               maxLinks: { type: "number", show: Inspector.showIfPresent },
-              loc: { readOnly: true, show: Inspector.showIfPresent },
+              location: { readOnly: true, show: Inspector.showIfPresent },
               group: { readOnly: true, show: Inspector.showIfPresent }
             }
           });
@@ -633,7 +643,7 @@ function init() {
           $('#svgWrapper').dialog({
             modal: true,
             autoOpen: false,
-            title: 'Add custom SVG',
+            title: 'Upload custom SVG',
             buttons: [
               {
                 text: "Import",
@@ -708,6 +718,45 @@ function init() {
               $('#myFile').val("");
           });
 
+          $('#jsonWrapper').dialog({
+            modal: true,
+            autoOpen: false,
+            title: 'Upload JSON file',
+            buttons: [
+              {
+                text: "Import",
+                click: function() {
+                  {
+                    //var jsonElem = $('#myJSON').prop('files');
+                    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.json)$/;
+                    if (regex.test($("#myJSON").val().toLowerCase())) {
+                        if (typeof (FileReader) != "undefined") {
+                          var reader = new FileReader();
+                          reader.onload = function (e) {
+                            var rawDoc = e.target.result;
+                            var res = JSON.parse(rawDoc);
+                            loadedJson = true;
+                            myDiagram.model = go.Model.fromJson(res[0]);
+                            loadedJson = false;
+                            tree = [];
+                            externalNames = [];
+                            toDiagram = [];
+                            tree = res[1];
+                            externalNames = res[2];
+                          }
+                          reader.readAsText($("#myJSON")[0].files[0]);
+                        } else {
+                            alert("This browser does not support HTML5.");
+                        }
+                    } else {
+                        alert("Please upload a valid JSON file.");
+                    }
+                  }
+                }
+              }
+            ]
+          });
+
           $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
           $( "#btn1" ).click(function () {
             var text = $("#txtbox").val();
@@ -733,15 +782,29 @@ function init() {
           });
 
           $( "#btn3" ).click(function () {
-            var text = $("#txtbox").val();
-            var jsn = myDiagram.model.toJson();
-            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(jsn);
-            var downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", text+".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+            if (myDiagram.nodes.count == 0) {
+              alert("Error, diagram is empty");
+            }
+            else {
+              var text = $("#txtbox").val();
+              //var jsn = myDiagram.model.toJson();
+              var mainJson = JSON.stringify([myDiagram.model.toJson(), tree, externalNames]);
+              var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(mainJson);
+              var downloadAnchorNode = document.createElement('a');
+              downloadAnchorNode.setAttribute("href", dataStr);
+              downloadAnchorNode.setAttribute("download", text+".json");
+              document.body.appendChild(downloadAnchorNode);
+              downloadAnchorNode.click();
+              downloadAnchorNode.remove();
+            }
+          });
+
+          $( "#btn4" ).click(function () {
+            var txt;
+              if (confirm("This action will clear the diagram, continue?")) {
+
+                  $('#jsonWrapper').dialog('open');
+              }
           });
 
           $( "#btn5" ).click(function () {
@@ -749,7 +812,13 @@ function init() {
           });
 
           $( "#btn6" ).click(function () {
+
           });
 
       });
+
+      function isObject(obj)
+        {
+            return obj !== undefined && obj !== null && obj.constructor == Object;
+        }
   }
