@@ -611,6 +611,38 @@ function init() {
           ])
         });
 
+    function checkValidKeyNames(diagram,tree,ext) {
+      var bool = false;
+      console.log(diagram.nodeDataArray);
+      for (var x in diagram.nodeDataArray) {
+        if (diagram.nodeDataArray[x].category == "LinkLabel") {
+          continue;
+        }
+        if (diagram.nodeDataArray[x].category == "external") {
+          if (external.includes(diagram.nodeDataArray[x].key)) {
+            continue;
+          }
+          else {
+            bool = true;
+            break;
+          }
+        }
+        var result = findObjectById(tree,diagram.nodeDataArray[x].key);
+        if (!result) {
+          bool = true;
+        }
+      }
+
+      if (bool) {
+        //console.log("Error");
+        return true;
+      }
+      else {
+        //console.log("OK");
+        return false;
+      }
+    }
+
     $(function() {
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
@@ -736,6 +768,13 @@ function init() {
                             loadedJson = true;
                             try {
                               var res = JSON.parse(rawDoc);
+                              if (res.length != 3) {
+                                throw err;
+                              }
+                              var check = checkValidKeyNames(JSON.parse(res[0]),res[1],res[2]);
+                              if (check) {
+                                throw err;
+                              }
                               myDiagram.model = go.Model.fromJson(res[0]);
                             }
                             catch (err) {
@@ -744,6 +783,7 @@ function init() {
                               return null;
                             }
                             loadedJson = false;
+
                             tree = [];
                             externalNames = [];
                             toDiagram = [];
