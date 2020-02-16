@@ -6,7 +6,9 @@ function init() {
         {
           "undoManager.isEnabled": true,
           mouseDrop: function(e) { finishDrop(e, null); },
-          ExternalObjectsDropped: addEntryFromPalette
+          ExternalObjectsDropped: addEntryFromPalette,
+          "LinkDrawn": linkCheck,
+          "LinkRelinked": linkCheck
         });
 
     function nodeStyle() {
@@ -58,6 +60,28 @@ function init() {
         grp.isHighlighted = false;
       }
 
+    function linkCheck(e) {
+      var link = e.subject;
+      if (typeof link.data.to == "number" && typeof link.data.from == "number") {
+        alert("Error, inavlid operation");
+        myDiagram.remove(link);
+      }
+      else if (typeof link.data.to == "number") {
+        var edgeLinks = myDiagram.findPartForKey(link.data.from).findLinksOutOf();
+        var error = false;
+        edgeLinks.each(function(n) {
+          if (n.data.labelKeys == link.data.to) {
+            alert("Error, inavlid operation");
+            error = true;
+            return null;
+          }
+        });
+        if (error){
+          myDiagram.remove(link);
+        }
+      }
+    }
+
     myDiagram.groupTemplateMap.add("dashedBox",
       GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
@@ -73,8 +97,9 @@ function init() {
         },
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
+          {insertAt: -1},
           GO(go.Shape, "Rectangle",
-            { name:"dBox", fill: null, strokeDashArray: [5,3]},
+            { name:"dBox", fill: null, fromLinkable: false, toLinkable: false, strokeDashArray: [5,3]},
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
           ),
@@ -84,9 +109,10 @@ function init() {
     myDiagram.groupTemplateMap.add("box",
       GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
-          background: "transparent",
           resizeObjectName: "dRect",
           mouseDrop: finishDrop,
+          mouseEnter: enter,
+          mouseLeave: leave,
           memberAdded: updateDict,
           memberRemoved: deleteDict,
           mouseDragEnter: function(e, grp, prev) { highlightGroup(e, grp, true); },
@@ -100,12 +126,13 @@ function init() {
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
+          GO(go.Shape, "Rectangle",
+            { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
             GO(go.TextBlock,
             {
               alignment: go.Spot.TopLeft,
               alignmentFocus: new go.Spot(0, 0, -4, -4),
-              font: "Bold 10pt Sans-Serif",
-              editable: true
+              font: "Bold 10pt Sans-Serif"
             },
               new go.Binding("text").makeTwoWay()),
         ),
@@ -156,6 +183,8 @@ function init() {
         { resizable: true,
           background: "transparent",
           resizeObjectName: "ov",
+          mouseEnter: enter,
+          mouseLeave: leave,
           mouseDrop: finishDrop,
           memberAdded: updateDict,
           memberRemoved: deleteDict,
@@ -170,12 +199,13 @@ function init() {
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
+          GO(go.Shape, "Rectangle",
+            { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
           GO(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
             alignmentFocus: new go.Spot(0, 0, -4, -4),
-            font: "Bold 10pt Sans-Serif",
-            editable: true
+            font: "Bold 10pt Sans-Serif"
           },
           new go.Binding("text").makeTwoWay())
         ),
@@ -203,8 +233,7 @@ function init() {
             {
               alignment: go.Spot.TopLeft,
               alignmentFocus: new go.Spot(0, 0, -4, -4),
-              font: "Bold 10pt Sans-Serif",
-              editable: true
+              font: "Bold 10pt Sans-Serif"
             },
           new go.Binding("text").makeTwoWay())
         ),
@@ -215,6 +244,8 @@ function init() {
         { resizable: true,
           background: "transparent",
           resizeObjectName: "hx",
+          mouseEnter: enter,
+          mouseLeave: leave,
           mouseDrop: finishDrop,
           memberAdded: updateDict,
           memberRemoved: deleteDict,
@@ -229,12 +260,13 @@ function init() {
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
+        GO(go.Shape, "Rectangle",
+          { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
           GO(go.TextBlock,
           {
             alignment: go.Spot.TopLeft,
             alignmentFocus: new go.Spot(0, 0, -4, -4),
-            font: "Bold 10pt Sans-Serif",
-            editable: true
+            font: "Bold 10pt Sans-Serif"
           },
           new go.Binding("text").makeTwoWay())
         ),
@@ -263,8 +295,7 @@ function init() {
             {
               alignment: go.Spot.TopLeft,
               alignmentFocus: new go.Spot(0, 0, -4, -4),
-              font: "Bold 10pt Sans-Serif",
-              editable: true
+              font: "Bold 10pt Sans-Serif"
             },
             new go.Binding("text").makeTwoWay())
         ),
@@ -279,8 +310,7 @@ function init() {
             "ext",
           {
             alignment: go.Spot.Center,
-            font: "Bold 10pt Sans-Serif",
-            editable: true
+            font: "Bold 10pt Sans-Serif"
           },
           new go.Binding("text").makeTwoWay())
         ),
@@ -298,6 +328,7 @@ function init() {
         )
       ));
 
+
     myDiagram.nodeTemplateMap.add("id",
       GO(go.Node, "Table", nodeStyle(),
         {
@@ -313,11 +344,13 @@ function init() {
           ),
         ));
 
+/*
     myDiagram.linkTemplateMap.add("multiLinks",
       GO("Link",
         { relinkableFrom: true, relinkableTo: true },
       GO("Shape", { stroke: "#2D9945", strokeWidth: 2 })
       ));
+      */
 
     myDiagram.model =
         GO(go.GraphLinksModel,
@@ -934,6 +967,20 @@ function init() {
           });
 
           $( "#btn6" ).click(function () {
+
+            myDiagram.commit(function(d) {
+              d.nodes.each(function(node) {
+                console.log("-----------------------");
+                console.log("NODE: "+node.data.key);
+                var links = node.findLinksConnected();
+                links.each(function(n) {
+                  console.log("from: "+n.data.from);
+                  console.log("to: "+n.data.to);
+                  console.log("label: "+n.data.label);
+                });
+
+              });
+            });
             //console.log(tree);
             //console.log(toDiagram);
           });
