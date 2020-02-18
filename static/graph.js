@@ -717,6 +717,16 @@ function init() {
       }
     }
 
+    function checkModelDuplicates(k) {
+      model = myPalette.model.nodeDataArray;
+      for (var x in model) {
+        if(model[x].key == k) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     $(function() {
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
@@ -753,14 +763,41 @@ function init() {
               {
                 text: "Import",
                 click: function() {
+                  name = $("#name").val();
+                  if (!name) {
+                    alert("Error, please specify a name for the custom SVG node");
+                    return null;
+                  }
+                  else {
+                    if (checkModelDuplicates(name)) {
+                      alert("Error, duplicate node name exists, please specify another name");
+                      return null;
+                    }
+                  }
                   var svgElem = $('#myFile').prop('files');
+
+                  //var test = svgElem[0].getBBox();
+                  /*
+                  var size = 0;
+                  var svgSize = document.getElementById('myFile').getBoundingClientRect();
+                  if (svgSize.width > svgSize.height) {
+                    size = svgSize.height/8;
+                  }
+                  else {
+                    size = svgSize.width/8;
+                  }
+                  console.log(svgSize);
+                  console.log(svgSize.height);
+                  console.log(svgSize.width);
+                  console.log(size);
+                  */
+
                   var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.svg)$/;
                   if (regex.test($("#myFile").val().toLowerCase())) {
                       if (typeof (FileReader) != "undefined") {
                         var reader = new FileReader();
                         reader.onload = function (e) {
                           var xmlDoc = $.parseXML(e.target.result);
-
                           var customPanel = new go.Panel();
 
                           var paths = xmlDoc.getElementsByTagName("path");
@@ -824,15 +861,15 @@ function init() {
                           customNode.mouseLeave = leave;
                           customNode.add(customPanel);
 
-                          myDiagram.nodeTemplateMap.add("custom", customNode);
-                          myPalette.model.addNodeData({ key: "cus", category: "custom", text: "custom", maxLinks: Infinity });
+                          myDiagram.nodeTemplateMap.add(name, customNode);
+                          myPalette.model.addNodeData({ key: name, category: name, text: "custom", maxLinks: Infinity });
                         }
                         reader.readAsText($("#myFile")[0].files[0]);
                       } else {
-                          alert("This browser does not support HTML5.");
+                          alert("Error, this browser does not support HTML5");
                       }
                   } else {
-                      alert("Please upload a valid SVG file.");
+                      alert("error, please upload a valid SVG file");
                   }
                 }
               }
@@ -841,6 +878,7 @@ function init() {
 
           $('div#svgWrapper').on('dialogclose', function(event) {
               $('#myFile').val("");
+              $('#name').val("");
           });
 
           $('#jsonWrapper').dialog({
@@ -967,7 +1005,12 @@ function init() {
           });
 
           $( "#btn6" ).click(function () {
-
+            model = myPalette.model.nodeDataArray;
+            for (var x in model) {
+              console.log(model[x].key);
+            }
+            console.log(myPalette.model.nodeDataArray);
+            /*
             myDiagram.commit(function(d) {
               d.nodes.each(function(node) {
                 console.log("-----------------------");
@@ -981,6 +1024,7 @@ function init() {
 
               });
             });
+            */
             //console.log(tree);
             //console.log(toDiagram);
           });
