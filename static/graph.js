@@ -749,7 +749,56 @@ function init() {
             }
           });
 
-          $('#wrapper').dialog({
+          $(document).ready(function(){
+            $('#startupWrapper').dialog('open');
+          });
+
+          $('#startupWrapper').dialog({
+            modal: true,
+            autoOpen: false,
+            title: 'Diagram Name',
+            buttons: [
+              {
+                text: "Submit",
+                click: function() {
+                  {
+                    if($("#diagramName").val() == ""){
+                        alert("Error, please fill the name field.");
+                    }
+                    else {
+                      var text = $("#diagramName").val();
+                      $("#txtbox").val(text);
+                      $(this).closest('#startupWrapper').dialog('close');
+                    }
+                  }
+              }
+            }]
+          });
+
+          $('div#startupWrapper').on('dialogclose', function(event) {
+              $("#diagramName").val("");
+          });
+
+          $('#newDiagramWrapper').dialog({
+            modal: true,
+            autoOpen: false,
+            title: 'New Diagram',
+            buttons: [
+              {
+                text: "Submit",
+                click: function() {
+                  {
+                    myDiagram.div = null;
+                    tree = [];
+                    toDiagram = [];
+                    externalNames = [];
+                    location.reload();
+                  }
+              }
+            }]
+          });
+
+          $('#formulaWrapper').dialog({
             modal: true,
             autoOpen: false,
             title: 'Generated Formula'
@@ -774,7 +823,7 @@ function init() {
                       return null;
                     }
                   }
-                  var svgElem = $('#myFile').prop('files');
+                  //var svgElem = $('#myFile').prop('files');
 
                   //var test = svgElem[0].getBBox();
                   /*
@@ -801,27 +850,65 @@ function init() {
                           var customPanel = new go.Panel();
 
                           var paths = xmlDoc.getElementsByTagName("path");
+                          //var gs = xmlDoc.getElementsByTagName("g");
+                          //console.log(gs);
+                          //console.log("__________________paths: "+paths);
                           for (var i = 0; i < paths.length; i++) {
-
+                            var path = paths[i];
+                          //  var g = gs[i+1];
+                            //console.log(g);
+                            //console.log("path: "+paths[i]);
+                            //console.log("g: "+g[i]);
                             var path = paths[i];
                             var shape = new go.Shape();
 
                             var stroke = path.getAttribute("stroke");
+                            //var strokeG = g.getAttribute("stroke");
+                            //console.log("stroke: "+strokeG);
+                            //console.log("stroke: "+stroke);
                             if (typeof stroke === "string" && stroke !== "none") {
+                              //console.log("stroke: "+stroke);
                               shape.stroke = stroke;
-                            } else {
+                            }
+                            else {
                               shape.stroke = null;
                             }
+                            //else if (typeof strokeG === "string" && strokeG !== "none") {
+                            //  console.log("stroke: "+strokeG);
+                            //  shape.stroke = strokeG;
+                            //}
+
 
                             var strokewidth = parseFloat(path.getAttribute("stroke-width"));
+                            //var strokewidthG = parseFloat(g.getAttribute("stroke-width"));
+                            //console.log("stroke wideth: "+strokewidth);
                             if (!isNaN(strokewidth)) shape.strokeWidth = strokewidth;
+                            /*
+                            if (!isNaN(strokewidth)) {
+                              console.log(strokewidth);
+                              shape.strokeWidth = strokewidth;
+                            }
+                            else if (!isNaN(strokewidthG)) {
+                              console.log(strokewidthG);
+                              shape.strokeWidth = strokewidthG;
+                            }
+                            */
 
                             var fill = path.getAttribute("fill");
+                            //var fillG = g.getAttribute("fill");
+                            //console.log("fill: "+fill);
                             if (typeof fill === "string") {
                               shape.fill = (fill === "none") ? null : fill;
                             }
+                            /*
+                            else if (typeof fillG === "string") {
+                              console.log(fillG);
+                              shape.fill = (fillG === "none") ? null : fill;
+                            }
+                            */
 
                             var data = path.getAttribute("d");
+                            //console.log("d: "+data );
                             if (typeof data === "string") shape.geometry = go.Geometry.parse(data, true);
 
                             customPanel.add(shape);
@@ -854,22 +941,23 @@ function init() {
                           customNode.fromLinkable = true;
                           customNode.toLinkable = true;
                           customNode.linkValidation = validation;
-                          customNode.height = 80;
-                          customNode.width = 80;
                           customNode.cursor = "pointer";
                           customNode.mouseEnter = enter;
                           customNode.mouseLeave = leave;
+                          customNode.bind(new go.Binding("width").makeTwoWay(), new go.Binding("height").makeTwoWay());
                           customNode.add(customPanel);
 
                           myDiagram.nodeTemplateMap.add(name, customNode);
-                          myPalette.model.addNodeData({ key: name, category: name, text: "custom", maxLinks: Infinity });
+                          myPalette.model.addNodeData({ key: name, category: name, text: "custom", width: 80, height: 80, maxLinks: Infinity });
                         }
                         reader.readAsText($("#myFile")[0].files[0]);
+                        alert("Successfully added an SVG element to the palette");
+                        $(this).closest('#svgWrapper').dialog('close');
                       } else {
                           alert("Error, this browser does not support HTML5");
                       }
                   } else {
-                      alert("error, please upload a valid SVG file");
+                      alert("Error, please upload a valid SVG file");
                   }
                 }
               }
@@ -950,8 +1038,12 @@ function init() {
             title: 'Help'
           });
 
-          $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6" ).button();
+          $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6, #btn7, #btn8" ).button();
           $( "#btn1" ).click(function () {
+            $('#newDiagramWrapper').dialog('open');
+          });
+
+          $( "#btn2" ).click(function () {
             var text = $("#txtbox").val();
             $("#result").html("");
             var res = generate();
@@ -961,11 +1053,11 @@ function init() {
             else {
               $( "#result" ).append("<p>" + text + " = " + res + "</p>");
             }
-            $('#wrapper').dialog('open');
+            $('#formulaWrapper').dialog('open');
             return false;
           });
 
-          $( "#btn2" ).click(function () {
+          $( "#btn3" ).click(function () {
             var text = $("#txtbox").val();
             var link = document.createElement('a');
             link.href = convertToImg();
@@ -974,7 +1066,7 @@ function init() {
             link.click();
           });
 
-          $( "#btn3" ).click(function () {
+          $( "#btn4" ).click(function () {
             if (myDiagram.nodes.count == 0) {
               alert("Error, diagram is empty");
             }
@@ -992,7 +1084,7 @@ function init() {
             }
           });
 
-          $( "#btn4" ).click(function () {
+          $( "#btn5" ).click(function () {
             var txt;
               if (confirm("This action will clear the diagram, continue?")) {
 
@@ -1000,11 +1092,11 @@ function init() {
               }
           });
 
-          $( "#btn5" ).click(function () {
+          $( "#btn6" ).click(function () {
             $('#svgWrapper').dialog('open');
           });
 
-          $( "#btn6" ).click(function () {
+          $( "#btn7" ).click(function () {
             model = myPalette.model.nodeDataArray;
             for (var x in model) {
               console.log(model[x].key);
@@ -1029,7 +1121,7 @@ function init() {
             //console.log(toDiagram);
           });
 
-          $( "#btn7" ).click(function () {
+          $( "#btn8" ).click(function () {
             $('#helpWrapper').dialog('open');
           });
 

@@ -23,13 +23,14 @@
 		<hr>
 		<div id="taskBar">
 			<input type="textbox" id="txtbox" value="New Diagram"></input>
-			<button id="btn1">Convert to formula</button>
-			<button id="btn2">Save as image</button>
-			<button id="btn3">Save diagram as JSON</button>
-			<button id="btn4">Load diagram</button>
-			<button id="btn5">Add custom SVG</button>
-			<button id="btn6">About</button>
-			<button id="btn7">Help</button>
+			<button id="btn1">New Diagram</button>
+			<button id="btn2">Convert to formula</button>
+			<button id="btn3">Save as image</button>
+			<button id="btn4">Save diagram as JSON</button>
+			<button id="btn5">Load diagram</button>
+			<button id="btn6">Add custom SVG</button>
+			<button id="btn7">About</button>
+			<button id="btn8">Help</button>
 		</div>
 		<div id="mainDiv">
 		    <div id="myPaletteDiv"></div>
@@ -41,7 +42,18 @@
 		      	</div>
 		    </div>
 	  </div>
-		<div id="wrapper">
+		<div id="startupWrapper">
+			<form>
+				<fieldset>
+					<label for="name">Name your project:</label>
+					<input type="text" name="diagramName" id="diagramName" value="New Diagram" class="text ui-widget-content ui-corner-all">
+				</fieldset>
+			</form>
+		</div>
+		<div id="newDiagramWrapper">
+				This will clear the diagram, save your work before proceeding.
+		</div>
+		<div id="formulaWrapper">
 			<div id="result"></div>
 		</div>
 		<div id="jsonWrapper">
