@@ -812,6 +812,7 @@ function init() {
               {
                 text: "Import",
                 click: function() {
+                  var radioValue = $("input[name='choice']:checked").val();
                   name = $("#name").val();
                   if (!name) {
                     alert("Error, please specify a name for the custom SVG node");
@@ -900,6 +901,8 @@ function init() {
                             if (typeof fill === "string") {
                               shape.fill = (fill === "none") ? null : fill;
                             }
+
+
                             /*
                             else if (typeof fillG === "string") {
                               console.log(fillG);
@@ -914,14 +917,6 @@ function init() {
                             customPanel.add(shape);
                           }
 
-                          var txt = new go.TextBlock();
-                          txt.alignment = go.Spot.Center;
-                          txt.margin = 20;
-                          txt.fromLinkable = false;
-                          txt.toLinkable = false;
-                          txt.editable = false;
-                          //customPanel.add(txt);
-
                           var box =  new go.Shape();
                           box.width = 50;
                           box.height = 50;
@@ -932,23 +927,53 @@ function init() {
                           box.name = "drag";
                           customPanel.add(box);
 
-                          var customNode = new go.Node(go.Panel.Viewbox);
-                          customNode.locationSpot = go.Spot.Center;
-                          customNode.resizable = true;
-                          customNode.resizeObjectName = "custom";
-                          customNode.mouseDrop = function(e, nod) { finishDrop(e, nod.containingGroup); };
-                          customNode.portId = "";
-                          customNode.fromLinkable = true;
-                          customNode.toLinkable = true;
-                          customNode.linkValidation = validation;
-                          customNode.cursor = "pointer";
-                          customNode.mouseEnter = enter;
-                          customNode.mouseLeave = leave;
-                          customNode.bind(new go.Binding("width").makeTwoWay(), new go.Binding("height").makeTwoWay());
-                          customNode.add(customPanel);
+                          if (radioValue == "nonatomic") {
+                            var customNode = new go.Node(go.Panel.Viewbox);
 
-                          myDiagram.nodeTemplateMap.add(name, customNode);
-                          myPalette.model.addNodeData({ key: name, category: name, text: "custom", width: 80, height: 80, maxLinks: Infinity });
+                            customNode.locationSpot = go.Spot.Center;
+                            customNode.resizable = true;
+                            customNode.resizeObjectName = "custom";
+                            customNode.mouseDrop = function(e, nod) { finishDrop(e, nod.containingGroup); };
+                            customNode.portId = "";
+                            customNode.fromLinkable = true;
+                            customNode.toLinkable = true;
+                            customNode.linkValidation = validation;
+                            customNode.cursor = "pointer";
+                            customNode.mouseEnter = enter;
+                            customNode.mouseLeave = leave;
+                            customNode.bind(new go.Binding("width").makeTwoWay(), new go.Binding("height").makeTwoWay());
+                            customNode.bind(new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify));
+                            customNode.add(customPanel);
+
+                            myDiagram.nodeTemplateMap.add(name, customNode);
+                            myPalette.model.addNodeData({ key: name, category: name, text: "custom", width: 80, height: 80, maxLinks: Infinity });
+                          }
+                          else {
+                            var customGroup = new go.Group(go.Panel.Viewbox);
+
+                            customGroup.locationSpot = go.Spot.Center;
+                            customGroup.resizable = true;
+                            customGroup.resizeObjectName = "custom";
+                            customGroup.background = "transparent",
+                            customGroup.mouseDrop = finishDrop;
+                            customGroup.portId = "";
+                            customGroup.fromLinkable = true;
+                            customGroup.toLinkable = true;
+                            customGroup.linkValidation = validation;
+                            customGroup.mouseEnter = enter;
+                            customGroup.mouseLeave = leave;
+                            customGroup.memberAdded = updateDict;
+                            customGroup.memberRemoved = deleteDict;
+                            customGroup.mouseDragEnter = function(e, grp, prev) { highlightGroup(e, grp, true); };
+                            customGroup.mouseDragLeave = function(e, grp, next) { highlightGroup(e, grp, false); };
+                            customGroup.bind(new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject());
+                            customGroup.bind(new go.Binding("width").makeTwoWay(), new go.Binding("height").makeTwoWay());
+                            customGroup.bind(new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify));
+                            customGroup.add(customPanel);
+
+                            myDiagram.groupTemplateMap.add(name, customGroup);
+                            myPalette.model.addNodeData({ key: name, category: name, text: "custom", width: 80, height: 80, isGroup: true, maxLinks: Infinity });
+                          }
                         }
                         reader.readAsText($("#myFile")[0].files[0]);
                         alert("Successfully added an SVG element to the palette");
@@ -967,6 +992,7 @@ function init() {
           $('div#svgWrapper').on('dialogclose', function(event) {
               $('#myFile').val("");
               $('#name').val("");
+              $("input[name='choice'][value='nonatomic']").prop('checked', true);
           });
 
           $('#jsonWrapper').dialog({
