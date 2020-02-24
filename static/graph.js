@@ -397,6 +397,14 @@ function init() {
       return res;
     }
 
+    function convertToSVG() {
+      var res = myDiagram.makeSvg({
+        scale: 1,
+        background: "white"
+      });
+      return res;
+    }
+
     function validation (fromnode, fromport, tonode, toport) {
       return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
     }
@@ -992,7 +1000,6 @@ function init() {
           $('div#svgWrapper').on('dialogclose', function(event) {
               $('#myFile').val("");
               $('#name').val("");
-              $("input[name='choice'][value='nonatomic']").prop('checked', true);
           });
 
           $('#jsonWrapper').dialog({
@@ -1064,7 +1071,8 @@ function init() {
             title: 'Help'
           });
 
-          $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6, #btn7, #btn8" ).button();
+          $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6, #btn7, #btn8, #btn9" ).button();
+
           $( "#btn1" ).click(function () {
             $('#newDiagramWrapper').dialog('open');
           });
@@ -1090,9 +1098,23 @@ function init() {
             link.download = text + '.png';
             document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
           });
 
           $( "#btn4" ).click(function () {
+            var text = $("#txtbox").val();
+            var svgData = convertToSVG().outerHTML;
+            var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+            var svgUrl = URL.createObjectURL(svgBlob);
+            var link = document.createElement("a");
+            link.href = svgUrl;
+            link.download = text + '.svg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+
+          $( "#btn5" ).click(function () {
             if (myDiagram.nodes.count == 0) {
               alert("Error, diagram is empty");
             }
@@ -1110,19 +1132,19 @@ function init() {
             }
           });
 
-          $( "#btn5" ).click(function () {
+          $( "#btn6" ).click(function () {
             var txt;
               if (confirm("This action will clear the diagram, continue?")) {
-
                   $('#jsonWrapper').dialog('open');
               }
           });
 
-          $( "#btn6" ).click(function () {
+          $( "#btn7" ).click(function () {
+            $("input[name='choice'][value='nonatomic']").prop('checked', true);
             $('#svgWrapper').dialog('open');
           });
 
-          $( "#btn7" ).click(function () {
+          $( "#btn8" ).click(function () {
             model = myPalette.model.nodeDataArray;
             for (var x in model) {
               console.log(model[x].key);
@@ -1147,7 +1169,7 @@ function init() {
             //console.log(toDiagram);
           });
 
-          $( "#btn8" ).click(function () {
+          $( "#btn9" ).click(function () {
             $('#helpWrapper').dialog('open');
           });
 
