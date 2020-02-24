@@ -935,7 +935,7 @@ function init() {
                           box.name = "drag";
                           customPanel.add(box);
 
-                          if (radioValue == "nonatomic") {
+                          if (radioValue == "atomic") {
                             var customNode = new go.Node(go.Panel.Viewbox);
 
                             customNode.locationSpot = go.Spot.Center;
@@ -1140,16 +1140,18 @@ function init() {
           });
 
           $( "#btn7" ).click(function () {
-            $("input[name='choice'][value='nonatomic']").prop('checked', true);
+            $("input[name='choice'][value='atomic']").prop('checked', true);
             $('#svgWrapper').dialog('open');
           });
 
           $( "#btn8" ).click(function () {
+            /*
             model = myPalette.model.nodeDataArray;
             for (var x in model) {
               console.log(model[x].key);
             }
             console.log(myPalette.model.nodeDataArray);
+            */
             /*
             myDiagram.commit(function(d) {
               d.nodes.each(function(node) {
