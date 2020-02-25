@@ -1003,6 +1003,7 @@ function init() {
                           if (radioValue == "atomic") {
                             var customNode = new go.Node(go.Panel.Viewbox);
 
+                            customNode.contextMenu = context("atomic");
                             customNode.locationSpot = go.Spot.Center;
                             customNode.resizable = true;
                             customNode.resizeObjectName = "custom";
@@ -1024,6 +1025,7 @@ function init() {
                           else {
                             var customGroup = new go.Group(go.Panel.Viewbox);
 
+                            customGroup.contextMenu = context("nonatomic");
                             customGroup.locationSpot = go.Spot.Center;
                             customGroup.resizable = true;
                             customGroup.resizeObjectName = "custom";
@@ -1043,6 +1045,8 @@ function init() {
                             customGroup.bind(new go.Binding("width").makeTwoWay(), new go.Binding("height").makeTwoWay());
                             customGroup.bind(new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify));
                             customGroup.add(customPanel);
+
+                            //customGroup.add({contextMenu: context("nonatomic")});
 
                             myDiagram.groupTemplateMap.add(name, customGroup);
                             myPalette.model.addNodeData({ key: name, category: name, text: "custom", width: 80, height: 80, isGroup: true, maxLinks: Infinity });
