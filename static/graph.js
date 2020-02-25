@@ -27,6 +27,55 @@ function init() {
       };
     }
 
+    function context(type) {
+      var cntx = GO("ContextMenu");
+      var panel =
+        GO(go.Panel, "Auto",
+          GO(go.Shape, "Rectangle",
+            {fill: "#FFFFFF", strokeWidth: 1},
+          ));
+      if (type == "env") {
+        panel.add(
+          GO(go.TextBlock, "Entity Type: environment",
+            {font: "Bold 10pt Sans-Serif", margin: 5 }
+          ));
+        cntx.add(panel);
+        return cntx;
+      }
+      else if (type == "atomic") {
+        panel.add(
+          GO(go.TextBlock, "Entity Type: atomic",
+            {font: "Bold 10pt Sans-Serif", margin: 5 }
+          ));
+        cntx.add(panel);
+        return cntx;
+      }
+      else if (type == "nonatomic"){
+        panel.add(
+          GO(go.TextBlock, "Entity Type: non-atomic",
+            {font: "Bold 10pt Sans-Serif", margin: 5 }
+          ));
+        cntx.add(panel);
+        return cntx;
+      }
+      else if (type == "ext") {
+        panel.add(
+          GO(go.TextBlock, "Entity Type: name",
+            {font: "Bold 10pt Sans-Serif", margin: 5 }
+          ));
+        cntx.add(panel);
+        return cntx;
+      }
+      else if (type == "id") {
+        panel.add(
+          GO(go.TextBlock, "Entity Type: identity",
+            {font: "Bold 10pt Sans-Serif", margin: 5 }
+          ));
+        cntx.add(panel);
+        return cntx;
+      }
+    }
+
     function enter(e, obj) {
       var shape = obj.findObject("drag");
       shape.fill = "#6DAB80";
@@ -104,6 +153,9 @@ function init() {
             new go.Binding("height").makeTwoWay()
           ),
         ),
+        {
+          contextMenu: context("env")
+        }
       ));
 
     myDiagram.groupTemplateMap.add("box",
@@ -136,6 +188,9 @@ function init() {
             },
               new go.Binding("text").makeTwoWay()),
         ),
+        {
+          contextMenu: context("nonatomic")
+        }
       ));
 
     myDiagram.nodeTemplateMap.add("filledBox",
@@ -156,17 +211,6 @@ function init() {
             ),
           GO(go.Shape, "Rectangle",
             { name: "drag", alignment: go.Spot.TopLeft, width: 10, height: 10, strokeWidth: 0, fill: "transparent", fromLinkable: false, toLinkable: false}),
-              /*
-            GO(go.TextBlock,
-              {
-                alignment: go.Spot.Center,
-                margin: 20,
-                fromLinkable: false,
-                toLinkable: false,
-                editable: false
-              }
-            ),
-            */
             GO(go.TextBlock,
               {
                 alignment: go.Spot.TopLeft,
@@ -176,6 +220,9 @@ function init() {
               },
               new go.Binding("text").makeTwoWay()),
         ),
+        {
+          contextMenu: context("atomic")
+        }
       ));
 
     myDiagram.groupTemplateMap.add("oval",
@@ -209,6 +256,9 @@ function init() {
           },
           new go.Binding("text").makeTwoWay())
         ),
+        {
+          contextMenu: context("nonatomic")
+        }
       ));
 
     myDiagram.nodeTemplateMap.add("filledOval",
@@ -237,6 +287,9 @@ function init() {
             },
           new go.Binding("text").makeTwoWay())
         ),
+        {
+          contextMenu: context("atomic")
+        }
       ));
 
     myDiagram.groupTemplateMap.add("hex",
@@ -270,6 +323,9 @@ function init() {
           },
           new go.Binding("text").makeTwoWay())
         ),
+        {
+          contextMenu: context("nonatomic")
+        }
       ));
 
 
@@ -299,6 +355,9 @@ function init() {
             },
             new go.Binding("text").makeTwoWay())
         ),
+        {
+          contextMenu: context("atomic")
+        }
       ));
 
     myDiagram.nodeTemplateMap.add("external",
@@ -314,6 +373,9 @@ function init() {
           },
           new go.Binding("text").makeTwoWay())
         ),
+        {
+          contextMenu: context("ext")
+        }
       ));
 
     myDiagram.nodeTemplateMap.add("LinkLabel",
@@ -342,6 +404,9 @@ function init() {
             new go.Binding("height").makeTwoWay()
           )
           ),
+          {
+            contextMenu: context("id")
+          }
         ));
 
 /*
