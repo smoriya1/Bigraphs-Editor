@@ -3,7 +3,8 @@ h1 {
 }
 
 body {
-	 background: #bdbdbd;
+	 /*background: #bdbdbd;*/
+	 background: #e6e6e6;
 }
 
 #taskBar {
@@ -23,7 +24,7 @@ hr {
   margin-right: auto;
   border-style: inset;
   border-width: solid 1px;
-	background-color: whitesmoke;
+	background-color: black;
 }
 
 #mainDiv {

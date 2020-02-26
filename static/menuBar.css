@@ -1,6 +1,6 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:700);
 #cssmenu {
-  background: #bdbdbd;
+  background: #e6e6e6;
   width: auto;
 }
 #cssmenu ul {
@@ -60,7 +60,7 @@
   top: 19px;
   height: 6px;
   width: 6px;
-  background: #ffffff;
+  background: #000000;
   opacity: .5;
 }
 #cssmenu ul li a:before {
