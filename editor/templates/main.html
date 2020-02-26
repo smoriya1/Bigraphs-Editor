@@ -10,17 +10,18 @@
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 		<script src="https://unpkg.com/gojs/release/go-debug.js" type="text/javascript"></script>
 		<script src="https://gojs.net/latest/extensions/Figures.js" type="text/javascript"></script>
-		<title>Test</title>
 		{% load static %}
+		<link rel="stylesheet"  type="text/css" href='{% static "menuBar.css" %}'>
 		<link rel="stylesheet" type="text/css" href='{% static "style.css" %}'>
 		<link rel='stylesheet' type="text/css" href='{% static "DataInspector.css" %}'>
 		<script src='{% static "DataInspector.js" %}'></script>
 		<script src='{% static "graph.js" %}'></script>
 		<title>Bigraphs Editor</title>
-		<h1 align="center">Bigraphs Editor</h1>
+		<h1 align="center">BIGRAPHS EDITOR</h1>
 	</head>
 	<body onload="init()">
 		<hr>
+		<!--
 		<div id="taskBar">
 			<input type="textbox" id="txtbox" value="New Diagram"></input>
 			<button id="btn1">New Diagram</button>
@@ -32,6 +33,21 @@
 			<button id="btn7">Add custom SVG</button>
 			<button id="btn8">About</button>
 			<button id="btn9">Help</button>
+		</div>
+		-->
+		<div id='cssmenu'>
+		<ul>
+			 <input type="textbox" id="txtbox" value="New Diagram"></input>
+		   <li><a href='#' id="btn1"><span>New Diagram</span></a></li>
+		   <li><a href='#' id="btn2"><span>Convert to Formula</span></a></li>
+		   <li><a href='#' id="btn3"><span>Export Diagram</span></a></li>
+			 <li><a href='#' id="btn4"><span>Import Diagram</span></a></li>
+			 <li><a href='#' id="btn5"><span>Save as Image</span></a></li>
+			 <li><a href='#' id="btn6"><span>Save as SVG</span></a></li>
+			 <li><a href='#' id="btn7"><span>Add custom SVG</span></a></li>
+			 <li><a href='#' id="btn8"><span>About</span></a></li>
+		   <li class='last'><a href='#' id="btn9"><span>Help</span></a></li>
+		</ul>
 		</div>
 		<div id="mainDiv">
 		    <div id="myPaletteDiv"></div>

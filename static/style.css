@@ -2,6 +2,10 @@ h1 {
 	font: 35px helvetica, sans-serif;
 }
 
+body {
+	 background: #bdbdbd;
+}
+
 #taskBar {
 	width: 100%;
   height: 30px;
@@ -19,6 +23,7 @@ hr {
   margin-right: auto;
   border-style: inset;
   border-width: solid 1px;
+	background-color: whitesmoke;
 }
 
 #mainDiv {
@@ -29,6 +34,7 @@ hr {
 }
 
 #myDiagramDiv {
+	background-color: whitesmoke;
   flex-grow: 1;
   width: 100%;
   height: 95vh;

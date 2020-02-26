@@ -1140,7 +1140,9 @@ function init() {
             title: 'Help'
           });
 
-          $( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6, #btn7, #btn8, #btn9" ).button();
+
+
+          //$( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6, #btn7, #btn8, #btn9" ).button();
 
           $( "#btn1" ).click(function () {
             $('#newDiagramWrapper').dialog('open');
@@ -1161,29 +1163,6 @@ function init() {
           });
 
           $( "#btn3" ).click(function () {
-            var text = $("#txtbox").val();
-            var link = document.createElement('a');
-            link.href = convertToImg();
-            link.download = text + '.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          });
-
-          $( "#btn4" ).click(function () {
-            var text = $("#txtbox").val();
-            var svgData = convertToSVG().outerHTML;
-            var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
-            var svgUrl = URL.createObjectURL(svgBlob);
-            var link = document.createElement("a");
-            link.href = svgUrl;
-            link.download = text + '.svg';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          });
-
-          $( "#btn5" ).click(function () {
             if (myDiagram.nodes.count == 0) {
               alert("Error, diagram is empty");
             }
@@ -1201,11 +1180,34 @@ function init() {
             }
           });
 
-          $( "#btn6" ).click(function () {
+          $( "#btn4" ).click(function () {
             var txt;
               if (confirm("This action will clear the diagram, continue?")) {
                   $('#jsonWrapper').dialog('open');
               }
+          });
+
+          $( "#btn5" ).click(function () {
+            var text = $("#txtbox").val();
+            var link = document.createElement('a');
+            link.href = convertToImg();
+            link.download = text + '.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+
+          $( "#btn6" ).click(function () {
+            var text = $("#txtbox").val();
+            var svgData = convertToSVG().outerHTML;
+            var svgBlob = new Blob([svgData], {type:"image/svg+xml;charset=utf-8"});
+            var svgUrl = URL.createObjectURL(svgBlob);
+            var link = document.createElement("a");
+            link.href = svgUrl;
+            link.download = text + '.svg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
           });
 
           $( "#btn7" ).click(function () {
@@ -1221,7 +1223,7 @@ function init() {
             }
             console.log(myPalette.model.nodeDataArray);
             */
-            /*
+
             myDiagram.commit(function(d) {
               d.nodes.each(function(node) {
                 console.log("-----------------------");
@@ -1235,7 +1237,7 @@ function init() {
 
               });
             });
-            */
+
             //console.log(tree);
             //console.log(toDiagram);
           });
@@ -1243,6 +1245,7 @@ function init() {
           $( "#btn9" ).click(function () {
             $('#helpWrapper').dialog('open');
           });
+
 
       });
   }
