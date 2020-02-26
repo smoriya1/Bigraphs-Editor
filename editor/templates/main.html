@@ -93,17 +93,18 @@
 		</div>
 		<div id="helpWrapper">
 			<ul>
-				<li>Entity Nodes: Comes in various shapes and types. Use the info panel to perform operations, such as changing the colour, setting the max links, renaming, etc.</li>
+				<li>Entity Nodes: Comes in various shapes and types. Use the info panel to edit certain attributes of a selected node. To check the type, right click an entity.</li>
 					<ul>
-					  <li>Environment Entity Node: The dashed environment entity denotes the region of adjacent parts of the system. Acts as the root in the editor and every entity must be placed inside the node. Unlinkable with other entities.</li>
-					  <li>Default Entity Node: The standard entity type which comes in three different shapes by default.</li>
-					  <li>Group Entity Node: The group node allows entities to be nested for a hierarchial representation of bigraphs.</li>
-						<li>Id Entity Node: The identity node which is represented as a dashed grey box by default. Unlinkable with other entities.</li>
-						<li>Name: Represents the links to other bigraphs. To use it, place the name outside the environment node and create a connection with an entity node. The name must match the link name.</li>
-						<li>Custom Entity Nodes: Custom nodes could be used by importing an SVG file. Imported nodes cannot be used as group entities.</li>
+					  <li>Environment Entity Node: The dashed environment entity denotes the region of adjacent parts of the system and acts as the root in the editor. To properly generate the algebraic expression, every entity must be placed inside the environment node. Unlinkable with other entities.</li>
+					  <li>Atomic Entity Node: The standard entity type.</li>
+					  <li>Non-Atomic Entity Node: Acts as a group node which allows entities to be nested for a hierarchial representation of bigraphs.</li>
+						<li>ID Entity Node: The identity node, which is represented as a dashed grey box by default, acts as a placeholder for other bigraphs. Unlinkable with other entities.</li>
+						<li>Name: Represents the links to other external bigraphs. To use it, simply place the name outside the environment node and create a connection with an entity node. The name must match the link name.</li>
+						<li>Custom Entity Nodes: Custom nodes could be used by importing an SVG file from the "Add Custom SVG" menu. The user could specify the type of entity as either atomic or non-atomic. The fill option is not available.</li>
 					</ul>
-				<li>Links: Form a link between other entities by clicking and dragging the arrow to another entity. Link names could be configured inside the info panel.</li>
-				<li>Dragging: To move default and custom nodes, click and drag the highlighted box on the top left corner.</li>
+				<li>Links: To form a link between other entities, click the region within the node and drag the highlighted arrow to another entity. Link names could be configured inside the info panel.</li>
+				<li>Dragging: To move entity nodes, click and drag the highlighted box on the top left corner.</li>
+				<li>Renaming: To change the name of the bigraph, change the value within the textbox on the left of the menubar.</li>
 			</ul>
 		</div>
 	</body>
