@@ -84,3 +84,8 @@ hr {
 	width: 400px;
 	height: 200px;
 }
+
+#formulaWrapper {
+	width: auto;
+	height: auto;
+}

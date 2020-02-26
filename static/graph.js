@@ -148,7 +148,7 @@ function init() {
         GO(go.Panel, "Auto",
           {insertAt: -1},
           GO(go.Shape, "Rectangle",
-            { name:"dBox", fill: null, fromLinkable: false, toLinkable: false, strokeDashArray: [5,3]},
+            { name:"dBox", fill: null, background: "transparent", fromLinkable: false, toLinkable: false, strokeDashArray: [5,3]},
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
           ),
@@ -159,9 +159,10 @@ function init() {
       ));
 
     myDiagram.groupTemplateMap.add("box",
-      GO(go.Group, "Table", nodeStyle(),
+      GO(go.Group, nodeStyle(), "Viewbox",
         { resizable: true,
-          resizeObjectName: "dRect",
+          resizeObjectName: "box",
+          background: "transparent",
           mouseDrop: finishDrop,
           mouseEnter: enter,
           mouseLeave: leave,
@@ -174,7 +175,7 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Rectangle",
-            {name:"dRect", fill: null, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            { name: "box", fill: null, background: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer" },
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
@@ -242,7 +243,7 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "ellipse",
-            {name: "ov", fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            {name: "ov", fill: null, background: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
@@ -309,7 +310,7 @@ function init() {
         new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject(),
         GO(go.Panel, "Auto",
           GO(go.Shape, "Hexagon",
-            {name: "hx", fill: null, strokeWidth: 1, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
+            {name: "hx", fill: null, background: "transparent", portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"},
             new go.Binding("width").makeTwoWay(),
             new go.Binding("height").makeTwoWay()
             ),
@@ -366,7 +367,6 @@ function init() {
           GO(go.Shape, "square",
             {fill: "transparent", strokeWidth: 0, portId: "", fromLinkable: true, toLinkable: true, cursor: "pointer"}),
           GO(go.TextBlock,
-            "ext",
           {
             alignment: go.Spot.Center,
             font: "Bold 10pt Sans-Serif"
