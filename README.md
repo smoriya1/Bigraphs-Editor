@@ -4,7 +4,7 @@ An interactive graphical user interface editor for modelling user defined bigrap
 [DEMO LINK](https://smor.pythonanywhere.com/)
 
 ## Screenshot
-![alt text](https://github.com/smoriya1/Bigraphs-Editor/Screenshot/Screenshot.png?raw=true)
+![image](./Screenshot/Screenshot.png)
 
 ## Table of contents
 * [General info](#general-info)
