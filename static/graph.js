@@ -1,6 +1,8 @@
 function init() {
     if (window.goSamples) goSamples();
     var GO = go.GraphObject.make;
+
+    // Main diagram
     myDiagram =
       GO(go.Diagram, "myDiagramDiv",
         {
@@ -11,6 +13,7 @@ function init() {
           "LinkRelinked": linkCheck
         });
 
+    //Node style template to define location of layout
     function nodeStyle() {
       return [
         new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify),
@@ -20,6 +23,7 @@ function init() {
       ];
     }
 
+    //Initial text style for dialogbox
     function textStyle() {
       return {
         font: "bold 11pt Helvetica, Arial, sans-serif",
@@ -27,6 +31,7 @@ function init() {
       };
     }
 
+    //Node types in palette
     function context(type) {
       var cntx = GO("ContextMenu");
       var panel =
@@ -76,6 +81,7 @@ function init() {
       }
     }
 
+    //Highlight line when dragged
     function enter(e, obj) {
       var shape = obj.findObject("drag");
       shape.fill = "#6DAB80";
@@ -83,18 +89,21 @@ function init() {
       shape.stroke = "#A6E6A1";
     };
 
+    //Undo highlight when undragged
     function leave(e, obj) {
         var shape = obj.findObject("drag");
         shape.fill = "transparent";
         shape.strokeWidth = 0;
     };
 
+    //Add node members to GoJS diagram hierarchy
     function finishDrop(e, grp) {
         var ok = (grp !== null ? grp.addMembers(grp.diagram.selection, true)
           : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
         if (!ok) e.diagram.currentTool.doCancel();
       }
 
+    //Highlight/unhighlight group (non-atomic) node when a node enters/leave its boundaries
     function highlightGroup(e, grp, show) {
         if (!grp) return;
         e.handled = true;
@@ -109,6 +118,7 @@ function init() {
         grp.isHighlighted = false;
       }
 
+    //Checks for attempts to form nested links, error if true
     function linkCheck(e) {
       var link = e.subject;
       if (typeof link.data.to == "number" && typeof link.data.from == "number") {
@@ -131,6 +141,7 @@ function init() {
       }
     }
 
+    //Environment node template
     myDiagram.groupTemplateMap.add("dashedBox",
       GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
@@ -158,6 +169,7 @@ function init() {
         }
       ));
 
+    //Non-atomic box node template
     myDiagram.groupTemplateMap.add("box",
       GO(go.Group, nodeStyle(), "Viewbox",
         { resizable: true,
@@ -194,6 +206,7 @@ function init() {
         }
       ));
 
+    //Atomic box node template
     myDiagram.nodeTemplateMap.add("filledBox",
       GO(go.Node, nodeStyle(), "Viewbox",
         { resizable: true,
@@ -226,6 +239,7 @@ function init() {
         }
       ));
 
+   //Non-atomic oval node template
     myDiagram.groupTemplateMap.add("oval",
       GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
@@ -262,6 +276,7 @@ function init() {
         }
       ));
 
+    //Atomic oval node template
     myDiagram.nodeTemplateMap.add("filledOval",
       GO(go.Node, "Table", nodeStyle(),
       { resizable: true,
@@ -293,6 +308,7 @@ function init() {
         }
       ));
 
+    //Non-atomic hex node template
     myDiagram.groupTemplateMap.add("hex",
       GO(go.Group, "Table", nodeStyle(),
         { resizable: true,
@@ -329,7 +345,7 @@ function init() {
         }
       ));
 
-
+    //Atomic hex node template
     myDiagram.nodeTemplateMap.add("filledHex",
       GO(go.Node, "Table", nodeStyle(),
       { resizable: true,
@@ -361,6 +377,7 @@ function init() {
         }
       ));
 
+    //External name node template
     myDiagram.nodeTemplateMap.add("external",
       GO(go.Node, "Table", nodeStyle(),
         GO(go.Panel, "Auto",
@@ -378,6 +395,7 @@ function init() {
         }
       ));
 
+    //Link label template
     myDiagram.nodeTemplateMap.add("LinkLabel",
       GO("Node",
         {
@@ -390,7 +408,7 @@ function init() {
         )
       ));
 
-
+    //Identity node template
     myDiagram.nodeTemplateMap.add("id",
       GO(go.Node, "Table", nodeStyle(),
         {
@@ -409,20 +427,13 @@ function init() {
           }
         ));
 
-/*
-    myDiagram.linkTemplateMap.add("multiLinks",
-      GO("Link",
-        { relinkableFrom: true, relinkableTo: true },
-      GO("Shape", { stroke: "#2D9945", strokeWidth: 2 })
-      ));
-      */
-
     myDiagram.model =
         GO(go.GraphLinksModel,
           { linkLabelKeysProperty: "labelKeys" });
 
     myDiagram.toolManager.linkingTool.archetypeLabelNodeData = { category: "LinkLabel" };
 
+    //Link design template
     myDiagram.linkTemplate =
       GO(go.Link,
         {
@@ -449,11 +460,13 @@ function init() {
     myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
     myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
 
+    //Hierarchy tree, root and ext name holders
     var tree = [];
     var toDiagram = [];
     var externalNames = [];
     loadedJson = false;
 
+    //Convert diagram to image
     function convertToImg() {
       var res = myDiagram.makeImageData({
         scale: 1,
@@ -462,6 +475,7 @@ function init() {
       return res;
     }
 
+    //Convert diagram to SVG
     function convertToSVG() {
       var res = myDiagram.makeSvg({
         scale: 1,
@@ -470,14 +484,14 @@ function init() {
       return res;
     }
 
+    //Checks if a node's link amount is not above max
     function validation (fromnode, fromport, tonode, toport) {
       return fromnode.linksConnected.count + tonode.linksConnected.count < fromnode.data.maxLinks;
     }
 
+    //Create and update tree when a new node is added to diagram or node group
     function updateDict(group, part) {
-      //console.log("updated: "+loadedJson + " : "+ part.key);
       if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 || ~part.key.indexOf("ext") != 0) {
-        //console.log(tree);
         return null;
       }
       if (loadedJson) {
@@ -507,22 +521,20 @@ function init() {
           children: []
         });
       }
-      //console.log(tree);
     }
 
+    //Delete tree entry by node type and update tree
     function deleteDict(group, part) {
       if (!part.key || typeof part.key == "number" || ~part.key.indexOf("env") != 0 || ~part.key.indexOf("ext") != 0) {
-        //console.log("null");
         return null;
       }
       toDiagram.push(part.key);
       var cpy = findObjectById(tree, part.key);
       deleteDuplicate(tree, part.key);
       tree.push(cpy);
-      //console.log(toDiagram);
-      //console.log(tree);
     }
 
+    //Searches for a specific node and removes entry in tree if found
     function deleteDuplicate(obj, key){
       for (var x in obj){
         if (obj[x].key == key){
@@ -538,6 +550,7 @@ function init() {
       }
     }
 
+    //Removes node from tree (or ext name from ext array) when selection is deleted
     myDiagram.addDiagramListener("SelectionDeleted",
       function(e) {
         e.subject.each(function(node) {
@@ -557,13 +570,12 @@ function init() {
         });
       });
 
+    //Add new entry to tree (or ext array) if a new node (or name) is added from the palette to the diagram
     function addEntryFromPalette(e) {
       if (loadedJson) {
-        //loadedJson = false;
         return null;
       }
       e.subject.each(function(p) {
-        //console.log(p.containingGroup);
         if (!(p.containingGroup) && ~p.key.indexOf("ext") == 0) {
           tree.push({
             key: p.key,
@@ -578,6 +590,7 @@ function init() {
       })
     }
 
+    //Returns specific object entry in tree
     function findObjectById(obj, k) {
       for (var x in obj) {
           if (obj[x].key == k) {
@@ -594,6 +607,7 @@ function init() {
       }
     }
 
+   //Returns string of node type of selection
     function findType(key) {
       if (~key.indexOf("env") != 0) {
         return "env";
@@ -606,10 +620,16 @@ function init() {
       }
     }
 
+    //Holds list of string for formula
     var resString = [];
+
+    //Hold the name of links in diagram
     var linkNames = [];
+
+    //Checks if link configuration is valid
     var validLinks = true;
 
+    //Returns the formula notation of diagram including external names, or error if configuration is invalid
     function generate() {
       var res;
       var nullExt = [];
@@ -625,7 +645,6 @@ function init() {
       if (validLinks) {
         for (var i in externalNames) {
           var label = myDiagram.findPartForKey(externalNames[i]).data.text;
-          //console.log(externalNames[i]);
           var links = myDiagram.findPartForKey(externalNames[i]).findLinksConnected();
           if (links.count == 0) {
             nullExt.push(label);
@@ -672,6 +691,7 @@ function init() {
       return res;
     }
 
+    //Generates and returns the string formula from the tree object
     function str(obj) {
       for (var x in obj) {
         if (obj[x].type != "env") {
@@ -686,7 +706,6 @@ function init() {
               resString.push("{");
               links.each(function(n) {
                 if (n.data.label == undefined) {
-                  //console.log("Error, link label is missing");
                   validLinks = false;
                 }
                 else {
@@ -737,6 +756,7 @@ function init() {
       }
     }
 
+    //Palette configuration with initial entry fields defined
     myPalette =
       GO(go.Palette, "myPaletteDiv",
         {
@@ -756,11 +776,10 @@ function init() {
           ])
         });
 
+    //Check if imported file has valid link configuration
     function checkValidKeyNames(diagram,tree,ext) {
       var bool = false;
-      //console.log(diagram.nodeDataArray);
       for (var x in diagram.nodeDataArray) {
-        //console.log(diagram.nodeDataArray[x].key);
         if (diagram.nodeDataArray[x].category == "LinkLabel") {
           continue;
         }
@@ -779,17 +798,15 @@ function init() {
           break;
         }
       }
-
       if (bool) {
-        //console.log("Error");
         return true;
       }
       else {
-        //console.log("OK");
         return false;
       }
     }
 
+    //Check if duplicate node names exist from imported file
     function checkModelDuplicates(k) {
       model = myPalette.model.nodeDataArray;
       for (var x in model) {
@@ -801,6 +818,7 @@ function init() {
     }
 
     $(function() {
+        //Draggable inspector element configuration
         $("#draggablePanel").draggable({ handle: "#infoDraggable" });
         var inspector = new Inspector('Info', myDiagram,
           {
@@ -822,6 +840,7 @@ function init() {
             }
           });
 
+          //New diagram wrapper configuration when opening webapp initally
           $(document).ready(function(){
             $('#startupWrapper').dialog('open');
           });
@@ -871,12 +890,14 @@ function init() {
             }]
           });
 
+          //Opening formula wrapper when converting to formula
           $('#formulaWrapper').dialog({
             modal: true,
             autoOpen: false,
             title: 'Generated Formula'
           });
 
+          //Opening the import SVG wrapper and adding a new node into the palette from the imported file while checking for errors
           $('#svgWrapper').dialog({
             modal: true,
             autoOpen: false,
@@ -897,23 +918,6 @@ function init() {
                       return null;
                     }
                   }
-                  //var svgElem = $('#myFile').prop('files');
-
-                  //var test = svgElem[0].getBBox();
-                  /*
-                  var size = 0;
-                  var svgSize = document.getElementById('myFile').getBoundingClientRect();
-                  if (svgSize.width > svgSize.height) {
-                    size = svgSize.height/8;
-                  }
-                  else {
-                    size = svgSize.width/8;
-                  }
-                  console.log(svgSize);
-                  console.log(svgSize.height);
-                  console.log(svgSize.width);
-                  console.log(size);
-                  */
 
                   var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.svg)$/;
                   if (regex.test($("#myFile").val().toLowerCase())) {
@@ -924,67 +928,29 @@ function init() {
                           var customPanel = new go.Panel();
 
                           var paths = xmlDoc.getElementsByTagName("path");
-                          //var gs = xmlDoc.getElementsByTagName("g");
-                          //console.log(gs);
-                          //console.log("__________________paths: "+paths);
                           for (var i = 0; i < paths.length; i++) {
                             var path = paths[i];
-                          //  var g = gs[i+1];
-                            //console.log(g);
-                            //console.log("path: "+paths[i]);
-                            //console.log("g: "+g[i]);
                             var path = paths[i];
                             var shape = new go.Shape();
 
                             var stroke = path.getAttribute("stroke");
-                            //var strokeG = g.getAttribute("stroke");
-                            //console.log("stroke: "+strokeG);
-                            //console.log("stroke: "+stroke);
                             if (typeof stroke === "string" && stroke !== "none") {
-                              //console.log("stroke: "+stroke);
                               shape.stroke = stroke;
                             }
                             else {
                               shape.stroke = null;
                             }
-                            //else if (typeof strokeG === "string" && strokeG !== "none") {
-                            //  console.log("stroke: "+strokeG);
-                            //  shape.stroke = strokeG;
-                            //}
-
 
                             var strokewidth = parseFloat(path.getAttribute("stroke-width"));
-                            //var strokewidthG = parseFloat(g.getAttribute("stroke-width"));
-                            //console.log("stroke wideth: "+strokewidth);
+
                             if (!isNaN(strokewidth)) shape.strokeWidth = strokewidth;
-                            /*
-                            if (!isNaN(strokewidth)) {
-                              console.log(strokewidth);
-                              shape.strokeWidth = strokewidth;
-                            }
-                            else if (!isNaN(strokewidthG)) {
-                              console.log(strokewidthG);
-                              shape.strokeWidth = strokewidthG;
-                            }
-                            */
 
                             var fill = path.getAttribute("fill");
-                            //var fillG = g.getAttribute("fill");
-                            //console.log("fill: "+fill);
                             if (typeof fill === "string") {
                               shape.fill = (fill === "none") ? null : fill;
                             }
 
-
-                            /*
-                            else if (typeof fillG === "string") {
-                              console.log(fillG);
-                              shape.fill = (fillG === "none") ? null : fill;
-                            }
-                            */
-
                             var data = path.getAttribute("d");
-                            //console.log("d: "+data );
                             if (typeof data === "string") shape.geometry = go.Geometry.parse(data, true);
 
                             customPanel.add(shape);
@@ -1038,15 +1004,13 @@ function init() {
                             customGroup.mouseEnter = enter;
                             customGroup.mouseLeave = leave;
                             customGroup.memberAdded = updateDict;
-                            customGroup.memberRemoved = deleteDict;
+                            customGroup.memberRemoved = ;
                             customGroup.mouseDragEnter = function(e, grp, prev) { highlightGroup(e, grp, true); };
                             customGroup.mouseDragLeave = function(e, grp, next) { highlightGroup(e, grp, false); };
                             customGroup.bind(new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject());
                             customGroup.bind(new go.Binding("width").makeTwoWay(), new go.Binding("height").makeTwoWay());
                             customGroup.bind(new go.Binding("location", "location", go.Point.parse).makeTwoWay(go.Point.stringify));
                             customGroup.add(customPanel);
-
-                            //customGroup.add({contextMenu: context("nonatomic")});
 
                             myDiagram.groupTemplateMap.add(name, customGroup);
                             myPalette.model.addNodeData({ key: name, category: name, text: "custom", width: 80, height: 80, isGroup: true, maxLinks: Infinity });
@@ -1071,6 +1035,7 @@ function init() {
               $('#name').val("");
           });
 
+          //Open import diagram wrapper and convert file into diagram while checking for errors
           $('#jsonWrapper').dialog({
             modal: true,
             autoOpen: false,
@@ -1080,7 +1045,6 @@ function init() {
                 text: "Import",
                 click: function() {
                   {
-                    //var jsonElem = $('#myJSON').prop('files');
                     var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.json)$/;
                     if (regex.test($("#myJSON").val().toLowerCase())) {
                         if (typeof (FileReader) != "undefined") {
@@ -1132,6 +1096,7 @@ function init() {
               $('#myJSON').val("");
           });
 
+          //Open the help wrapper
           $('#helpWrapper').dialog({
             'height': "auto",
             'width' : "800px",
@@ -1140,14 +1105,12 @@ function init() {
             title: 'Help'
           });
 
-
-
-          //$( "#btn1, #btn2, #btn3, #btn4, #btn5, #btn6, #btn7, #btn8, #btn9" ).button();
-
+          //Initializing new Diagram button
           $( "#btn1" ).click(function () {
             $('#newDiagramWrapper').dialog('open');
           });
 
+          //Initializing convert to formula button
           $( "#btn2" ).click(function () {
             var text = $("#txtbox").val();
             $("#result").html("");
@@ -1162,13 +1125,13 @@ function init() {
             return false;
           });
 
+          //Initializing export diagram button
           $( "#btn3" ).click(function () {
             if (myDiagram.nodes.count == 0) {
               alert("Error, diagram is empty");
             }
             else {
               var text = $("#txtbox").val();
-              //var jsn = myDiagram.model.toJson();
               var mainJson = JSON.stringify([myDiagram.model.toJson(), tree, externalNames]);
               var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(mainJson);
               var downloadAnchorNode = document.createElement('a');
@@ -1180,6 +1143,7 @@ function init() {
             }
           });
 
+          //Initializing import diagram button
           $( "#btn4" ).click(function () {
             var txt;
               if (confirm("This action will clear the diagram, continue?")) {
@@ -1187,6 +1151,7 @@ function init() {
               }
           });
 
+          //Initializing save as image button
           $( "#btn5" ).click(function () {
             var text = $("#txtbox").val();
             var link = document.createElement('a');
@@ -1197,6 +1162,7 @@ function init() {
             document.body.removeChild(link);
           });
 
+          //Initializing save as SVG button
           $( "#btn6" ).click(function () {
             var text = $("#txtbox").val();
             var svgData = convertToSVG().outerHTML;
@@ -1210,42 +1176,19 @@ function init() {
             document.body.removeChild(link);
           });
 
+          //Initializing add custom SVG button
           $( "#btn7" ).click(function () {
             $("input[name='choice'][value='atomic']").prop('checked', true);
             $('#svgWrapper').dialog('open');
           });
 
+          //Initializing about button
           $( "#btn8" ).click(function () {
-            /*
-            model = myPalette.model.nodeDataArray;
-            for (var x in model) {
-              console.log(model[x].key);
-            }
-            console.log(myPalette.model.nodeDataArray);
-            */
-
-            myDiagram.commit(function(d) {
-              d.nodes.each(function(node) {
-                console.log("-----------------------");
-                console.log("NODE: "+node.data.key);
-                var links = node.findLinksConnected();
-                links.each(function(n) {
-                  console.log("from: "+n.data.from);
-                  console.log("to: "+n.data.to);
-                  console.log("label: "+n.data.label);
-                });
-
-              });
-            });
-
-            //console.log(tree);
-            //console.log(toDiagram);
           });
 
+          //Initializing help button
           $( "#btn9" ).click(function () {
             $('#helpWrapper').dialog('open');
           });
-
-
       });
   }
