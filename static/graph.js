@@ -1004,7 +1004,7 @@ function init() {
                             customGroup.mouseEnter = enter;
                             customGroup.mouseLeave = leave;
                             customGroup.memberAdded = updateDict;
-                            customGroup.memberRemoved = ;
+                            customGroup.memberRemoved = deleteDict;
                             customGroup.mouseDragEnter = function(e, grp, prev) { highlightGroup(e, grp, true); };
                             customGroup.mouseDragLeave = function(e, grp, next) { highlightGroup(e, grp, false); };
                             customGroup.bind(new go.Binding("background", "isHighlighted", function(h) { return h ? "rgba(255,0,0,0.2)" : "transparent"; }).ofObject());
